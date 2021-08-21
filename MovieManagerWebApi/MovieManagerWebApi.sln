@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31613.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieManagerWebApi", "MovieManagerWebApi\MovieManagerWebApi.csproj", "{C273771F-F02F-42B5-B4CB-98D2C98AD389}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieManagerWebApi", "MovieManagerWebApi\MovieManagerWebApi.csproj", "{C273771F-F02F-42B5-B4CB-98D2C98AD389}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{1F27164B-0E50-4763-9987-31BE56A65163}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{1F27164B-0E50-4763-9987-31BE56A65163}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{630A8A3A-7505-4FEE-B6E4-CC9B1E8E29B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataLayer", "DataLayer\DataLayer.csproj", "{630A8A3A-7505-4FEE-B6E4-CC9B1E8E29B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{838D021C-BD68-4ED8-B0C2-1D3CCAA46B0C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceLayer", "ServiceLayer\ServiceLayer.csproj", "{838D021C-BD68-4ED8-B0C2-1D3CCAA46B0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4D2C7E39-9D8D-427B-B29C-DF6464056443}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer.Tests", "DataLayer.Tests\DataLayer.Tests.csproj", "{1902F94B-C9A1-485A-BED3-45A031E6A8F8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{838D021C-BD68-4ED8-B0C2-1D3CCAA46B0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{838D021C-BD68-4ED8-B0C2-1D3CCAA46B0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{838D021C-BD68-4ED8-B0C2-1D3CCAA46B0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1902F94B-C9A1-485A-BED3-45A031E6A8F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1902F94B-C9A1-485A-BED3-45A031E6A8F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1902F94B-C9A1-485A-BED3-45A031E6A8F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1902F94B-C9A1-485A-BED3-45A031E6A8F8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1902F94B-C9A1-485A-BED3-45A031E6A8F8} = {4D2C7E39-9D8D-427B-B29C-DF6464056443}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F7FB7F8B-3AD5-4112-AB5E-5C48981CE0FE}

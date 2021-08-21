@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Models
+namespace Domain
 {
     public class User : BaseEntity
     {
@@ -38,7 +38,7 @@ namespace Models
         public bool IsPasswordValid(string password)
         {
             using var hasher = SHA256.Create();
-            byte[] passBytes = Encoding.UTF8.GetBytes(password);
+            var passBytes = Encoding.UTF8.GetBytes(password);
             var currentHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
 
             return currentHash.SequenceEqual(PassHash);
