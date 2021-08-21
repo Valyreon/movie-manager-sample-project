@@ -8,13 +8,14 @@ namespace DataLayer.Tests
     [TestClass]
     public class MovieRepositoryTests
     {
+        private static int dbCount = 0;
         private DbContextOptions<MovieDbContext> options;
 
         [TestInitialize]
         public void Setup()
         {
             options = new DbContextOptionsBuilder<MovieDbContext>()
-                                .UseInMemoryDatabase(databaseName: "MovieListDatabase")
+                                .UseInMemoryDatabase(databaseName: $"MovieListDatabase{dbCount++}")
                                 .Options;
 
             using var uow = new UnitOfWork(new MovieDbContext(options));
@@ -47,15 +48,56 @@ namespace DataLayer.Tests
             uow.Movies.Add(theDarkKnight);
             uow.Movies.Add(godfather);
 
+            var reviewOne = new Review()
+            {
+                Rating = 10,
+                Movie = godfather
+            };
+
+            var reviewTwo = new Review()
+            {
+                Rating = 8,
+                Movie = godfather
+            };
+
+            var reviewThree = new Review()
+            {
+                Rating = 10,
+                Movie = shawshankRedemption
+            };
+
+            uow.Reviews.Add(reviewOne);
+            uow.Reviews.Add(reviewTwo);
+            uow.Reviews.Add(reviewThree);
+
             _ = uow.Commit();
         }
 
         [TestCleanup]
         public void Finish()
         {
+
+        }
+
+        [TestMethod]
+        public void GetSingleTopRatedMovieTest()
+        {
             using var uow = new UnitOfWork(new MovieDbContext(options));
-            uow.Movies.RemoveRange(uow.Movies.GetAll());
-            uow.Commit();
+
+            var topRatedMovie = uow.Movies.GetTopRatedMovies(1).Single();
+
+            Assert.AreEqual("The Shawshank Redemption", topRatedMovie.Title);
+        }
+
+        [TestMethod]
+        public void GetTwoTopRatedMovieTest()
+        {
+            using var uow = new UnitOfWork(new MovieDbContext(options));
+
+            var topRatedMovies = uow.Movies.GetTopRatedMovies(2).ToList();
+
+            Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
+            Assert.AreEqual("The Godfather", topRatedMovies[1].Title);
         }
 
         [TestMethod]

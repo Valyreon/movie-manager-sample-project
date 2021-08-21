@@ -15,11 +15,12 @@ namespace DataLayer.Repositories
 
         public IEnumerable<Movie> GetTopRatedMovies(int count = 10)
         {
-            return context.Reviews.GroupBy(r => r.MovieId)
+            var ids = context.Reviews.GroupBy(r => r.MovieId)
                                   .Select(g => new { MovieId = g.Key, AverageRating = g.Average(m => m.Rating) })
                                   .OrderByDescending(g => g.AverageRating)
-                                  .Take(count)
-                                  .Select(c => context.Movies.Find(c.MovieId));
+                                  .Take(count);
+
+            return ids.ToList().Select(id => context.Movies.Find(id.MovieId));
         }
 
         public IEnumerable<Movie> GetPage(string token, string orderBy, bool ascending, int pageNumber = 0, int pageCount = 10)

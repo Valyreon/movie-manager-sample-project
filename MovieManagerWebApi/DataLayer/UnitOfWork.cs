@@ -8,6 +8,7 @@ namespace DataLayer
         private readonly MovieDbContext context;
 
         private IMoviesRepository moviesRepository;
+        private IReviewsRepository reviewsRepository;
 
         public UnitOfWork(MovieDbContext context)
         {
@@ -15,6 +16,7 @@ namespace DataLayer
         }
 
         public IMoviesRepository Movies => moviesRepository ??= new MoviesRepository(context);
+        public IReviewsRepository Reviews => reviewsRepository ??= new ReviewsRepository(context);
 
         public int Commit()
         {
