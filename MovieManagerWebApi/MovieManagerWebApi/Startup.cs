@@ -29,6 +29,7 @@ namespace MovieManagerWebApi
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IMovieService, MovieService>();
             services.AddScoped<IMappingService, MappingService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -26,8 +26,6 @@ namespace Domain
         [MinLength(32)]
         public byte[] PassHash { get; set; }
 
-        public string ProfileImage { get; set; }
-
         [StringLength(200)]
         public string About { get; set; }
 

@@ -1,4 +1,4 @@
-using DataLayer.Interfaces;
+﻿using DataLayer.Interfaces;
 using DataLayer.Repositories;
 
 namespace DataLayer
@@ -9,6 +9,7 @@ namespace DataLayer
 
         private IMoviesRepository moviesRepository;
         private IRatingsRepository reviewsRepository;
+        private IUsersRepository usersRepository;
 
         public UnitOfWork(MovieDbContext context)
         {
@@ -17,6 +18,7 @@ namespace DataLayer
 
         public IMoviesRepository Movies => moviesRepository ??= new MoviesRepository(context);
         public IRatingsRepository Ratings => reviewsRepository ??= new RatingsRepository(context);
+        public IUsersRepository Users => usersRepository ??= new UsersRepository(context);
 
         public int Commit()
         {
