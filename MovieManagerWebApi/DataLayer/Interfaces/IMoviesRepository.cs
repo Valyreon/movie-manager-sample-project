@@ -5,7 +5,7 @@ namespace DataLayer.Interfaces
 {
     public interface IMoviesRepository : IGenericRepository<Movie>
     {
-        IEnumerable<Movie> GetTopRated(int count = 10);
-        IEnumerable<Movie> Search(string token);
+        Movie GetMovieWithLoadedData(int id);
+        IEnumerable<Movie> SearchTopRated(string token, int page = 0, int itemsPerPage = 10);
     }
 }

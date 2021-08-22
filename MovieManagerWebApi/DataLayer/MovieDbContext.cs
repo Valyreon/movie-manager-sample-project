@@ -37,7 +37,7 @@ namespace DataLayer
                 .AddJsonFile("appsettings.json")
                 .Build();
             var connectionString = configuration.GetConnectionString("MoviesDatabase");
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseNpgsql(connectionString).EnableSensitiveDataLogging();
         }
 
         public static void LogStuff(string value)

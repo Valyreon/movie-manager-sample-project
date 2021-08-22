@@ -13,12 +13,8 @@ namespace Domain
         public int UserId { get; set; }
         public User User { get; set; }
 
-        [ForeignKey("Movie")]
         public int MovieId { get; set; }
-        public Movie Movie { get; set; }
 
-        [ForeignKey("Series")]
         public int SeriesId { get; set; }
-        public TVShow Series { get; set; }
     }
 }

@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using Domain;
+using ServiceLayer.Responses;
 
 namespace ServiceLayer.Interfaces
 {
     public interface IMovieService
     {
-        IEnumerable<Movie> GetTopRatedMovies(int count);
+        MoviePageResponse SearchTopRatedMovies(string token, int pageNumber = 0, int itemsPerPage = 10);
+        MovieDetailsResponse GetMovieDetails(int id);
     }
 }

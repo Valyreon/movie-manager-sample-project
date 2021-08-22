@@ -1,22 +1,34 @@
-using System.Collections.Generic;
-using DataLayer;
-using Domain;
+using System.Linq;
+using DataLayer.Interfaces;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Responses;
 
 namespace ServiceLayer
 {
     public class MovieService : IMovieService
     {
-        private readonly UnitOfWork uow;
+        private readonly IUnitOfWork uow;
+        private readonly IMappingService mappingService;
 
-        public MovieService(UnitOfWork uow)
+        public MovieService(IUnitOfWork uow, IMappingService mappingService)
         {
             this.uow = uow;
+            this.mappingService = mappingService;
         }
 
-        public IEnumerable<Movie> GetTopRatedMovies(int count)
+        public MovieDetailsResponse GetMovieDetails(int id)
         {
-            return uow.Movies.GetTopRated(count);
+            return mappingService.MapMovieToMovieDetailsResponse(uow.Movies.GetMovieWithLoadedData(id));
+        }
+
+        public MoviePageResponse SearchTopRatedMovies(string token, int pageNumber = 0, int itemsPerPage = 10)
+        {
+            return new MoviePageResponse
+            {
+                Items = uow.Movies.SearchTopRated(token, pageNumber, itemsPerPage).Select(mappingService.MapMovieToListItem),
+                ItemsPerPage = 10,
+                PageNumber = pageNumber
+            };
         }
     }
 }

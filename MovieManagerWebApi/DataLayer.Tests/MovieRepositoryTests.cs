@@ -48,20 +48,20 @@ namespace DataLayer.Tests
 
             var reviewOne = new Rating()
             {
-                Value = 10,
-                Movie = godfather
+                Value = 5,
+                MovieId = godfather.Id
             };
 
             var reviewTwo = new Rating()
             {
-                Value = 8,
-                Movie = godfather
+                Value = 3,
+                MovieId = godfather.Id
             };
 
             var reviewThree = new Rating()
             {
-                Value = 10,
-                Movie = shawshankRedemption
+                Value = 5,
+                MovieId = shawshankRedemption.Id
             };
 
             uow.Ratings.Add(reviewOne);
@@ -82,7 +82,7 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovie = uow.Movies.GetTopRated(1).Single();
+            var topRatedMovie = uow.Movies.SearchTopRated(null, 0, 1).Single();
 
             Assert.AreEqual("The Shawshank Redemption", topRatedMovie.Title);
         }
@@ -92,10 +92,35 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovies = uow.Movies.GetTopRated(2).ToList();
+            var topRatedMovies = uow.Movies.SearchTopRated(null, 0, 2).ToList();
 
+            Assert.AreEqual(2, topRatedMovies.Count);
             Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
             Assert.AreEqual("The Godfather", topRatedMovies[1].Title);
+        }
+
+        [TestMethod]
+        public void GetDefaultTopRatedMovieTest()
+        {
+            using var uow = new UnitOfWork(new MovieDbContext(options));
+
+            var topRatedMovies = uow.Movies.SearchTopRated(null).ToList();
+
+            // will still return two because one movie is unrated
+            Assert.AreEqual(2, topRatedMovies.Count);
+            Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
+            Assert.AreEqual("The Godfather", topRatedMovies[1].Title);
+        }
+
+        [TestMethod]
+        public void SearchTest_4Stars()
+        {
+            using var uow = new UnitOfWork(new MovieDbContext(options));
+
+            var movie4Star = uow.Movies.SearchTopRated("4 stars").Single();
+
+            // godfather will have 4 average rating
+            Assert.AreEqual("The Godfather", movie4Star.Title);
         }
     }
 }

@@ -1,26 +1,30 @@
-using System.Collections.Generic;
-using Domain;
 using Microsoft.AspNetCore.Mvc;
-using ServiceLayer;
+using ServiceLayer.Interfaces;
+using ServiceLayer.Responses;
 
 namespace MovieManagerWebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class MoviesController : ControllerBase
     {
-        private readonly MovieService movieService;
+        private readonly IMovieService movieService;
 
-        public MoviesController(MovieService movieService)
+        public MoviesController(IMovieService movieService)
         {
             this.movieService = movieService;
         }
 
         [HttpGet]
-        [Route("top-rated")]
-        public IEnumerable<Movie> TopRatedMovies([FromQuery] int count)
+        public MovieDetailsResponse MovieDetails([FromQuery] int id)
         {
-            return movieService.GetTopRatedMovies(count);
+            return movieService.GetMovieDetails(id);
+        }
+
+        [HttpGet]
+        public MovieListResponse SearchTopRatedMovies([FromQuery] string token)
+        {
+            return movieService.SearchTopRatedMovies(token);
         }
     }
 }
