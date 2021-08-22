@@ -13,6 +13,7 @@ namespace Domain
         [StringLength(200)]
         public string Description { get; set; }
         public string CoverPath { get; set; }
+        public DateTime ReleaseDate { get; set; }
 
         public ICollection<Actor> Actors { get; set; }
         public ICollection<Rating> Ratings { get; set; }

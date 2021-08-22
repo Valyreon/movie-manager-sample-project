@@ -10,6 +10,7 @@ namespace DataLayer
         private IMoviesRepository moviesRepository;
         private IRatingsRepository reviewsRepository;
         private IUsersRepository usersRepository;
+        private ITVShowsRepository tvShowsRepository;
 
         public UnitOfWork(MovieDbContext context)
         {
@@ -19,6 +20,7 @@ namespace DataLayer
         public IMoviesRepository Movies => moviesRepository ??= new MoviesRepository(context);
         public IRatingsRepository Ratings => reviewsRepository ??= new RatingsRepository(context);
         public IUsersRepository Users => usersRepository ??= new UsersRepository(context);
+        public ITVShowsRepository TVShows => tvShowsRepository ??= new TVShowsRepository(context);
 
         public int Commit()
         {

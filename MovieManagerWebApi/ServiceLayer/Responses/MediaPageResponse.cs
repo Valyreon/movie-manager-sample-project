@@ -3,9 +3,9 @@ using ServiceLayer.Responses.JsonModels;
 
 namespace ServiceLayer.Responses
 {
-    public class MoviePageResponse
+    public class MediaPageResponse
     {
-        public IEnumerable<MovieListItem> Items { get; set; }
+        public IEnumerable<MediaListItem> Items { get; set; }
         public int PageNumber { get; set; }
         public int TotalNumberOfPages { get; set; }
         public int PageSize { get; set; }

@@ -6,6 +6,8 @@ namespace DataLayer.Interfaces
     {
         IMoviesRepository Movies { get; }
         IUsersRepository Users { get; }
+        ITVShowsRepository TVShows { get; }
+        IRatingsRepository Ratings { get; }
         int Commit();
     }
 }

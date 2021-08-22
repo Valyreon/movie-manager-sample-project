@@ -2,7 +2,7 @@ using System;
 
 namespace ServiceLayer.Responses.JsonModels
 {
-    public class MovieListItem
+    public class MediaListItem
     {
         public DateTime ReleaseDate { get; set; }
         public string Title { get; set; }
