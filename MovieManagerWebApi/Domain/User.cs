@@ -49,6 +49,7 @@ namespace Domain
         {
             using var hasher = SHA256.Create();
             var passBytes = Encoding.UTF8.GetBytes(password);
+            Salt = new byte[32];
             new Random().NextBytes(Salt);
 
             PassHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
