@@ -19,13 +19,14 @@ namespace DataLayer
         }
 
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<Person> People { get; set; }
-        public DbSet<Review> Reviews { get; set; }
+        public DbSet<TVShow> TVShows { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Actor> Actors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.LogTo(LogStuff);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -39,39 +40,41 @@ namespace DataLayer
             optionsBuilder.UseNpgsql(connectionString);
         }
 
+        public static void LogStuff(string value)
+        {
+            const string logPath = @"C:\Users\Luka\Desktop\movieLog.txt";
+            File.AppendAllText(logPath, "\n=================================================\n}" + value);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // genre movie many to many
-            modelBuilder.Entity<Movie>()
-                        .HasMany(m => m.Genres)
-                        .WithMany(g => g.Movies);
+            modelBuilder.Entity<User>()
+                   .HasIndex(u => u.Email)
+                   .IsUnique();
 
-            // movie directors many to many
-            modelBuilder.Entity<Movie>()
-                        .HasMany(m => m.Directors)
-                        .WithMany(d => d.Directed)
-                        .UsingEntity(j => j.ToTable("DirectorMovie"));
+            modelBuilder.Entity<User>()
+                   .HasIndex(u => u.Username)
+                   .IsUnique();
 
             // movie actors many to many
             modelBuilder.Entity<Movie>()
                         .HasMany(m => m.Actors)
-                        .WithMany(d => d.StarredIn)
+                        .WithMany(d => d.StarredInMovies)
                         .UsingEntity(j => j.ToTable("ActorMovie"));
 
-            // movie writers many to many
-            modelBuilder.Entity<Movie>()
-                        .HasMany(m => m.Writers)
-                        .WithMany(d => d.Written)
-                        .UsingEntity(j => j.ToTable("WriterMovie"));
+            modelBuilder.Entity<TVShow>()
+                        .HasMany(m => m.Actors)
+                        .WithMany(d => d.StarredInTvShows)
+                        .UsingEntity(j => j.ToTable("ActorTVShow"));
 
             // movie has many reviews
-            modelBuilder.Entity<Movie>().HasMany(m => m.Reviews);
+            modelBuilder.Entity<Movie>().HasMany(m => m.Ratings);
 
-            // user has watched many movies
-            modelBuilder.Entity<User>().HasMany(m => m.ToWatch);
+            // tvshow has many reviews
+            modelBuilder.Entity<TVShow>().HasMany(m => m.Ratings);
 
             // user has many reviews
-            modelBuilder.Entity<User>().HasMany(m => m.Reviews);
+            modelBuilder.Entity<User>().HasMany(m => m.Ratings);
         }
 
         public override int SaveChanges()

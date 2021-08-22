@@ -27,13 +27,14 @@ namespace Domain
         public byte[] PassHash { get; set; }
 
         public string ProfileImage { get; set; }
+
+        [StringLength(200)]
         public string About { get; set; }
 
         [Required]
         public bool Private { get; set; }
 
-        public ICollection<Movie> ToWatch { get; set; }
-        public ICollection<Review> Reviews { get; set; }
+        public ICollection<Rating> Ratings { get; set; }
 
         public bool IsPasswordValid(string password)
         {
@@ -42,6 +43,15 @@ namespace Domain
             var currentHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
 
             return currentHash.SequenceEqual(PassHash);
+        }
+
+        public void SetPassword(string password)
+        {
+            using var hasher = SHA256.Create();
+            var passBytes = Encoding.UTF8.GetBytes(password);
+            new Random().NextBytes(Salt);
+
+            PassHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
         }
     }
 }

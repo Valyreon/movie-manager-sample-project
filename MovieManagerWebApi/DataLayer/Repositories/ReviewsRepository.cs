@@ -3,9 +3,9 @@ using Domain;
 
 namespace DataLayer.Repositories
 {
-    public class ReviewsRepository : GenericRepository<Review>, IReviewsRepository
+    public class RatingsRepository : GenericRepository<Rating>, IRatingsRepository
     {
-        public ReviewsRepository(MovieDbContext context) : base(context)
+        public RatingsRepository(MovieDbContext context) : base(context)
         {
         }
     }

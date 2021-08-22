@@ -2,7 +2,7 @@ using Domain;
 
 namespace DataLayer.Interfaces
 {
-    public interface IReviewsRepository : IGenericRepository<Review>
+    public interface IRatingsRepository : IGenericRepository<Rating>
     {
 
     }

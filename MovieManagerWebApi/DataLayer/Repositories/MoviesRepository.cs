@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DataLayer.Interfaces;
 using Domain;
-using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Repositories
 {
@@ -13,52 +12,57 @@ namespace DataLayer.Repositories
         {
         }
 
-        public IEnumerable<Movie> GetTopRatedMovies(int count = 10)
+        public IEnumerable<Movie> GetTopRated(int count = 10)
         {
-            var ids = context.Reviews.GroupBy(r => r.MovieId)
-                                  .Select(g => new { MovieId = g.Key, AverageRating = g.Average(m => m.Rating) })
+            var ids = context.Ratings.GroupBy(r => r.MovieId)
+                                  .Select(g => new { MovieId = g.Key, AverageRating = g.Average(r => r.Value) })
                                   .OrderByDescending(g => g.AverageRating)
                                   .Take(count);
 
             return ids.ToList().Select(id => context.Movies.Find(id.MovieId));
         }
 
-        public IEnumerable<Movie> GetPage(string token, string orderBy, bool ascending, int pageNumber = 0, int pageCount = 10)
+        public IEnumerable<Movie> Search(string token)
         {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                return GetTopRated();
+            }
+
             var query = context.Movies.AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(orderBy))
+            //Search engine should also understand phrases like "5 stars", "at least 3 stars", "after 2015", "older than 5 years"
+            const string specificStarsPattern = "([1-5]) stars";
+            const string atLeastStarsPattern = "at least ([1-5]) stars";
+            const string afterYearPattern = @"after (\d{4})";
+            const string olderThanYears = @"older than (\d+) years";
+
+            var trimmedToken = token.Trim();
+            if (Regex.IsMatch(trimmedToken, specificStarsPattern))
             {
-                query = query.Where(m => EF.Functions.Like(m.Title, $"%{token}%") || EF.Functions.Like(m.Description, $"%{token}%"));
+                var regexResult = Regex.Match(trimmedToken, specificStarsPattern);
+                var stars = int.Parse(regexResult.Groups[1].Value);
+
+                query = query.Where(m => m.Ratings.Average(r => r.Value) >= stars);
+            }
+            else if (Regex.IsMatch(trimmedToken, atLeastStarsPattern))
+            {
+
+            }
+            else if (Regex.IsMatch(trimmedToken, afterYearPattern))
+            {
+
+            }
+            else if (Regex.IsMatch(trimmedToken, olderThanYears))
+            {
+
+            }
+            else
+            {
+
             }
 
-            if (!string.IsNullOrWhiteSpace(orderBy))
-            {
-                if (string.Equals(orderBy, "title", StringComparison.OrdinalIgnoreCase))
-                {
-                    query = ascending
-                        ? query.OrderBy(m => m.Title)
-                        : query.OrderByDescending(m => m.Title);
-                }
-                else if (string.Equals(orderBy, "release", StringComparison.OrdinalIgnoreCase))
-                {
-                    query = ascending
-                        ? query.OrderBy(m => m.ReleaseYear)
-                        : query.OrderByDescending(m => m.ReleaseYear);
-                }
-                else if (string.Equals(orderBy, "duration", StringComparison.OrdinalIgnoreCase))
-                {
-                    query = ascending
-                        ? query.OrderBy(m => m.Runtime)
-                        : query.OrderByDescending(m => m.Runtime);
-                }
-                else
-                {
-                    throw new ArgumentException($"Invalid order by value '{orderBy}'. Expecting 'title', 'release' or 'duration'.");
-                }
-            }
-
-            return query.Skip(pageNumber * pageCount).Take(pageCount);
+            return query;
         }
     }
 }
