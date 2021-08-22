@@ -23,11 +23,14 @@ namespace ServiceLayer
 
         public MoviePageResponse SearchTopRatedMovies(string token, int pageNumber = 0, int itemsPerPage = 10)
         {
+            var (PageItems, TotalNumberOfPages) = uow.Movies.SearchTopRated(token, pageNumber, itemsPerPage);
+
             return new MoviePageResponse
             {
-                Items = uow.Movies.SearchTopRated(token, pageNumber, itemsPerPage).Select(mappingService.MapMovieToListItem),
-                ItemsPerPage = 10,
-                PageNumber = pageNumber
+                Items = PageItems.Select(mappingService.MapMovieToListItem),
+                PageSize = itemsPerPage,
+                PageNumber = pageNumber + 1,
+                TotalNumberOfPages = TotalNumberOfPages
             };
         }
     }

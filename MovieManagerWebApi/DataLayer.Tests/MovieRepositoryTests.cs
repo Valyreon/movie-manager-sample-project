@@ -82,7 +82,7 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovie = uow.Movies.SearchTopRated(null, 0, 1).Single();
+            var topRatedMovie = uow.Movies.SearchTopRated(null, 0, 1).PageItems.Single();
 
             Assert.AreEqual("The Shawshank Redemption", topRatedMovie.Title);
         }
@@ -92,7 +92,7 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovies = uow.Movies.SearchTopRated(null, 0, 2).ToList();
+            var topRatedMovies = uow.Movies.SearchTopRated(null, 0, 2).PageItems.ToList();
 
             Assert.AreEqual(2, topRatedMovies.Count);
             Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
@@ -104,7 +104,7 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovies = uow.Movies.SearchTopRated(null).ToList();
+            var topRatedMovies = uow.Movies.SearchTopRated().PageItems.ToList();
 
             // will still return two because one movie is unrated
             Assert.AreEqual(2, topRatedMovies.Count);
@@ -117,7 +117,7 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var movie4Star = uow.Movies.SearchTopRated("4 stars").Single();
+            var movie4Star = uow.Movies.SearchTopRated("4 stars").PageItems.Single();
 
             // godfather will have 4 average rating
             Assert.AreEqual("The Godfather", movie4Star.Title);

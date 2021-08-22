@@ -6,6 +6,6 @@ namespace DataLayer.Interfaces
     public interface IMoviesRepository : IGenericRepository<Movie>
     {
         Movie GetMovieWithLoadedData(int id);
-        IEnumerable<Movie> SearchTopRated(string token, int page = 0, int itemsPerPage = 10);
+        (IEnumerable<Movie> PageItems, int TotalNumberOfPages) SearchTopRated(string token = null, int page = 0, int itemsPerPage = 10);
     }
 }

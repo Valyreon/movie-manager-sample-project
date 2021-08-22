@@ -22,91 +22,63 @@ namespace DataLayer.Repositories
                                  .SingleOrDefault(m => m.Id == id);
         }
 
-        private IEnumerable<Movie> GetTopRated(int pageNumber = 0, int itemsPerPage = 10)
+        public (IEnumerable<Movie> PageItems, int TotalNumberOfPages) SearchTopRated(string token = null, int pageNumber = 0, int itemsPerPage = 10)
         {
-            var ids = context.Ratings.GroupBy(r => r.MovieId)
-                                  .Select(g => new { MovieId = g.Key, AverageRating = g.Average(r => r.Value) })
-                                  .OrderByDescending(g => g.AverageRating)
-                                  .Skip(pageNumber * itemsPerPage)
-                                  .Take(itemsPerPage);
-
-            return ids.ToList().Select(id => context.Movies
-                               .Include(m => m.Ratings)
-                               .Single(m => m.Id == id.MovieId));
-        }
-
-        public IEnumerable<Movie> SearchTopRated(string token, int pageNumber = 0, int itemsPerPage = 10)
-        {
-            if (string.IsNullOrWhiteSpace(token))
-            {
-                return GetTopRated(pageNumber, itemsPerPage);
-            }
-
             var query = context.Movies.AsQueryable();
 
-            //Search engine should also understand phrases like "5 stars", "at least 3 stars", "after 2015", "older than 5 years"
-            const string specificStarsPattern = "^([1-5]) stars$";
-            const string atLeastStarsPattern = "^at least ([1-5]) star(s)?$";
-            const string afterYearPattern = @"^after (\d{4})$";
-            const string olderThanYears = @"^older than (\d+) years$";
+            var specificStarsRegex = new Regex("^([1-5]) stars$");
+            var atLeastStarsRegex = new Regex("^at least ([1-5]) star(s)?$");
+            var afterYearRegex = new Regex(@"^after (\d{4})$");
+            var olderThanRegex = new Regex(@"^older than (\d+) years$");
+            Match match = null;
 
-            var trimmedToken = token.Trim();
-            if (Regex.IsMatch(trimmedToken, specificStarsPattern))
+            var trimmedToken = token == null ? "" : token.Trim();
+            if ((match = specificStarsRegex.Match(trimmedToken)).Success)
             {
-                var regexResult = Regex.Match(trimmedToken, specificStarsPattern);
-                var stars = int.Parse(regexResult.Groups[1].Value);
+                var stars = int.Parse(match.Groups[1].Value);
 
-                //return query.Where(m => m.Ratings.Average(r => r.Value) > stars - 0.5 && m.Ratings.Average(r => r.Value) <= stars + 0.5);
-
-                var matchMovieIds = context.Ratings.GroupBy(r => r.MovieId)
-                                                   .Select(g => new { MovieId = g.Key, AverageRating = g.Average(r => r.Value) })
-                                                   .Where(a => a.AverageRating > stars - 0.5 && a.AverageRating <= stars + 0.5)
-                                                   .OrderByDescending(a => a.AverageRating)
-                                                   .Skip(pageNumber * itemsPerPage)
-                                                   .Take(itemsPerPage);
-
-                return matchMovieIds.ToList().Select(id => context.Movies
-                               .Include(m => m.Ratings)
-                               .Single(m => m.Id == id.MovieId));
+                query = query.Where(m => m.Ratings.Average(r => r.Value) > stars - 0.5 && m.Ratings.Average(r => r.Value) <= stars + 0.5);
             }
-            else if (Regex.IsMatch(trimmedToken, atLeastStarsPattern))
+            else if ((match = atLeastStarsRegex.Match(trimmedToken)).Success)
             {
-                var regexResult = Regex.Match(trimmedToken, atLeastStarsPattern);
-                var stars = int.Parse(regexResult.Groups[1].Value);
+                var stars = int.Parse(match.Groups[1].Value);
 
-                query = query.Include(m => m.Ratings)
-                            .Where(m => m.Ratings.Average(r => r.Value) >= stars)
-                            .OrderByDescending(m => m.Ratings.Average(r => r.Value));
+                query = query.Where(m => m.Ratings.Average(r => r.Value) >= stars)
+                             .OrderByDescending(m => m.Ratings.Average(r => r.Value));
             }
-            else if (Regex.IsMatch(trimmedToken, afterYearPattern))
+            else if ((match = afterYearRegex.Match(trimmedToken)).Success)
             {
-                var regexResult = Regex.Match(trimmedToken, afterYearPattern);
-                var year = int.Parse(regexResult.Groups[1].Value);
-
+                var year = int.Parse(match.Groups[1].Value);
                 var afterDate = new DateTime(year, 12, 31);
 
-                query = query.Include(m => m.Ratings)
-                            .Where(m => m.ReleaseDate > afterDate)
-                            .OrderByDescending(m => m.Ratings.Average(r => r.Value));
-
+                query = query.Where(m => m.ReleaseDate > afterDate);
             }
-            else if (Regex.IsMatch(trimmedToken, olderThanYears))
+            else if ((match = olderThanRegex.Match(trimmedToken)).Success)
             {
-                var regexResult = Regex.Match(trimmedToken, olderThanYears);
-                var years = int.Parse(regexResult.Groups[1].Value);
-
+                var years = int.Parse(match.Groups[1].Value);
                 var beforeDate = DateTime.Now.AddYears(-years);
-                query = query.Include(m => m.Ratings).Where(m => m.ReleaseDate < beforeDate)
-                            .OrderByDescending(m => m.Ratings.Average(r => r.Value));
+
+                query = query.Where(m => m.ReleaseDate < beforeDate);
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(trimmedToken))
             {
-                query = query.Include(m => m.Ratings)
-                            .Where(m => EF.Functions.ILike(m.Title, $"%{token}%") || EF.Functions.ILike(m.Description, $"%{token}%"))
-                            .OrderByDescending(m => m.Ratings.Average(r => r.Value));
+                query = query.Where(m => EF.Functions.ILike(m.Title, $"%{token}%") || EF.Functions.ILike(m.Description, $"%{token}%"));
             }
 
-            return query.Skip(pageNumber * itemsPerPage).Take(itemsPerPage);
+            var resultItems = query.Include(m => m.Ratings)
+                                   .OrderByDescending(m => m.Ratings.Average(r => r.Value))
+                                   .Skip(pageNumber * itemsPerPage)
+                                   .Take(itemsPerPage);
+
+            return (resultItems, CalculateNumberOfPages(query.Count(), itemsPerPage));
+        }
+
+        private int CalculateNumberOfPages(int totalNumber, int pageSize)
+        {
+            var nbFullyFilledPages = totalNumber / pageSize;
+            var nbPartiallyFilledPages = (totalNumber % pageSize == 0) ? 0 : 1;
+
+            return nbFullyFilledPages + nbPartiallyFilledPages;
         }
     }
 }

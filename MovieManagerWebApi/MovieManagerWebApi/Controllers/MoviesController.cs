@@ -22,9 +22,12 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpGet]
-        public MovieListResponse SearchTopRatedMovies([FromQuery] string token)
+        public MoviePageResponse SearchTopRatedMovies(
+            [FromQuery] string token,
+            [FromQuery] int pageNumber = 0,
+            [FromQuery] int pageSize = 10)
         {
-            return movieService.SearchTopRatedMovies(token);
+            return movieService.SearchTopRatedMovies(token, pageNumber, pageSize);
         }
     }
 }
