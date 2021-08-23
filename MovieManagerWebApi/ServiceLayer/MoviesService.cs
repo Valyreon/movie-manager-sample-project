@@ -2,11 +2,12 @@ using System;
 using System.Linq;
 using DataLayer.Interfaces;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Requests;
 using ServiceLayer.Responses;
 
 namespace ServiceLayer
 {
-    public class MovieService : IMovieService
+    public class MovieService : IMoviesService
     {
         private readonly IUnitOfWork uow;
         private readonly IMappingService mappingService;
@@ -29,14 +30,44 @@ namespace ServiceLayer
             return mappingService.MapMovieToDetailsResponse(movie);
         }
 
-        public MoviesPageResponse SearchTopRatedMovies(string token, int pageNumber = 0, int itemsPerPage = 10)
+        public void Rate(RateRequest request, string userEmail)
         {
-            var (PageItems, TotalNumberOfPages) = uow.Movies.SearchTopRated(token, pageNumber, itemsPerPage);
+            var user = uow.Users.GetUserByEmail(userEmail);
+
+            if (user == null)
+            {
+                throw new Exception("Invalid user."); // custom exception
+            }
+
+            var movie = uow.Movies.GetById(request.MediaId);
+
+            if (movie == null)
+            {
+                throw new Exception("Invalid mvoie id."); //Custom exception
+            }
+
+            var rating = uow.Ratings.GetUserRatingForMovie(request.MediaId, user.Id);
+
+            if (rating != null)
+            {
+                rating.Value = request.Value;
+                uow.Commit();
+                return;
+            }
+
+            rating = new Domain.Rating { UserId = user.Id, MovieId = request.MediaId, Value = request.Value };
+            uow.Ratings.Add(rating);
+            uow.Commit();
+        }
+
+        public MoviesPageResponse SearchTopRatedMovies(SearchMediaRequest request)
+        {
+            var (PageItems, TotalNumberOfPages) = uow.Movies.SearchTopRated(request.Token, request.PageNumber, request.PageSize);
 
             return new MoviesPageResponse
             {
                 Items = PageItems.Select(mappingService.MapMovieToListItem),
-                PageNumber = pageNumber + 1,
+                PageNumber = request.PageNumber + 1,
                 PageSize = 10,
                 TotalPages = TotalNumberOfPages
             };
