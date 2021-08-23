@@ -26,7 +26,6 @@ namespace DataLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.LogTo(LogStuff);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -37,7 +36,7 @@ namespace DataLayer
                 .AddJsonFile("appsettings.json")
                 .Build();
             var connectionString = configuration.GetConnectionString("MoviesDatabase");
-            optionsBuilder.UseNpgsql(connectionString).EnableSensitiveDataLogging();
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         public static void LogStuff(string value)
@@ -55,6 +54,9 @@ namespace DataLayer
             modelBuilder.Entity<User>()
                    .HasIndex(u => u.Username)
                    .IsUnique();
+
+            modelBuilder.Entity<Rating>().HasIndex("UserId", "MovieId").IsUnique();
+            modelBuilder.Entity<Rating>().HasIndex("UserId", "SeriesId").IsUnique();
 
             // movie actors many to many
             modelBuilder.Entity<Movie>()

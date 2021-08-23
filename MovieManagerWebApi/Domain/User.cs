@@ -30,7 +30,7 @@ namespace Domain
         public string About { get; set; }
 
         [Required]
-        public bool Private { get; set; }
+        public bool IsPrivate { get; set; }
 
         public ICollection<Rating> Ratings { get; set; }
 

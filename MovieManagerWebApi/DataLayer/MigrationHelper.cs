@@ -1,69 +1,81 @@
 using System;
-using Domain;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DataLayer
 {
     internal static class MigrationHelper
     {
-        public static void SeedData(MigrationBuilder migrationBuilder)
+        public static void SeedData(MigrationBuilder builder)
         {
-            var shawshankRedemption = new Movie()
+            foreach (var movie in InitialData.Movies)
             {
-                Title = "The Shawshank Redemption",
-                Description = "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-                ReleaseDate = new DateTime(1994, 1, 1),
-            };
+                builder.InsertData(
+                    "Movies",
+                    new string[] { "Id", "Title", "Description", "ReleaseDate", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { movie.Id, movie.Title, movie.Description, movie.ReleaseDate, DateTime.Now, DateTime.Now });
+            }
 
-            var godfather = new Movie()
+            foreach (var tvShow in InitialData.TVShows)
             {
-                Title = "The Godfather",
-                Description = "An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.",
-                ReleaseDate = new DateTime(1972, 1, 1),
-            };
+                builder.InsertData(
+                    "TVShows",
+                    new string[] { "Id", "Title", "Description", "ReleaseDate", "EndDate", "NumberOfSeasons", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { tvShow.Id, tvShow.Title, tvShow.Description, tvShow.ReleaseDate, tvShow.EndDate, tvShow.NumberOfSeasons, DateTime.Now, DateTime.Now });
+            }
 
-            var theDarkKnight = new Movie()
+            foreach (var actor in InitialData.Actors)
             {
-                Title = "The Dark Knight",
-                Description = "When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.",
-                ReleaseDate = new DateTime(2008, 1, 1),
-            };
+                builder.InsertData(
+                    "Actors",
+                    new string[] { "Id", "Name", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { actor.Id, actor.Name, DateTime.Now, DateTime.Now });
+            }
 
-            var moviesColumns = new string[] { "Id", "Title", "Description", "ReleaseDate", "CreatedWhen", "ModifiedWhen" };
-            migrationBuilder.InsertData(
-                "Movies",
-                moviesColumns,
-                new object[] { 1, shawshankRedemption.Title, shawshankRedemption.Description, shawshankRedemption.ReleaseDate, DateTime.Now, DateTime.Now }
-                );
-            migrationBuilder.InsertData(
-                "Movies",
-                moviesColumns,
-                new object[] { 2, godfather.Title, godfather.Description, godfather.ReleaseDate, DateTime.Now, DateTime.Now });
-            migrationBuilder.InsertData(
-                "Movies",
-                moviesColumns,
-                new object[] { 3, theDarkKnight.Title, theDarkKnight.Description, theDarkKnight.ReleaseDate, DateTime.Now, DateTime.Now });
-
-            var user = new User
+            foreach (var user in InitialData.Users)
             {
-                Username = "default",
-                Email = "default@default.com",
-                CreatedWhen = DateTime.Now,
-                ModifiedWhen = DateTime.Now,
-                Id = 1
-            };
-            user.SetPassword("default");
+                builder.InsertData(
+                    "Users",
+                    new string[] { "Id", "Username", "Email", "Salt", "PassHash", "IsPrivate", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { user.Id, user.Username, user.Email, user.Salt, user.PassHash, user.IsPrivate, DateTime.Now, DateTime.Now });
+            }
 
-            migrationBuilder.InsertData(
-                "Users",
-                new string[] { "Id", "Username", "Email", "CreatedWhen", "ModifiedWhen", "Salt", "PassHash", "Private" },
-                new object[] { user.Id, user.Username, user.Email, user.CreatedWhen, user.ModifiedWhen, user.Salt, user.PassHash, user.Private });
+            foreach (var rating in InitialData.Ratings)
+            {
+                builder.InsertData(
+                    "Ratings",
+                    new string[] { "Id", "Value", "UserId", "MovieId", "SeriesId", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, rating.SeriesId, DateTime.Now, DateTime.Now });
+            }
 
-            var ratingColumns = new string[] { "Value", "MovieId", "UserId", "CreatedWhen", "ModifiedWhen" };
-            migrationBuilder.InsertData("Ratings", ratingColumns, new object[] { 5, 2, 1, DateTime.Now, DateTime.Now });
-            migrationBuilder.InsertData("Ratings", ratingColumns, new object[] { 3, 2, 1, DateTime.Now, DateTime.Now });
-            migrationBuilder.InsertData("Ratings", ratingColumns, new object[] { 5, 1, 1, DateTime.Now, DateTime.Now });
+            foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)
+            {
+                foreach (var actorId in InitialData.TVShowActorsConnections[tvShowid])
+                {
+                    builder.InsertData(
+                    "ActorTVShow",
+                    new string[] { "ActorsId", "StarredInTvShowsId" },
+                    new object[] { actorId, tvShowid });
+                }
+            }
 
+            foreach (var movieId in InitialData.MovieActorsConnections.Keys)
+            {
+                foreach (var actorId in InitialData.MovieActorsConnections[movieId])
+                {
+                    builder.InsertData(
+                    "ActorMovie",
+                    new string[] { "ActorsId", "StarredInMoviesId" },
+                    new object[] { actorId, movieId });
+                }
+            }
+        }
+
+        public static void EnsureOneColumnIsNullInRatingTable(MigrationBuilder builder)
+        {
+            builder.Sql(@"ALTER TABLE Ratings
+                          ADD CONSTRAINT OneColumnNull CHECK
+                          ((MovieId IS NULL AND SeriesId IS NOT NULL) OR
+                          (MovieId IS NOT NULL AND SeriesId IS NULL))");
         }
     }
 }

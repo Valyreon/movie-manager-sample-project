@@ -1,3 +1,4 @@
+using System;
 using Domain;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Responses.JsonModels;
@@ -10,8 +11,9 @@ namespace ServiceLayer
         {
             return new MediaListItem
             {
+                Id = movie.Id,
                 Title = movie.Title,
-                AverageRating = movie.AverageRating,
+                AverageRating = movie.AverageRating.HasValue ? Math.Round(movie.AverageRating.Value, 1) : (double?)null,
                 ReleaseDate = movie.ReleaseDate,
                 CoverPath = movie.CoverPath
             };
@@ -21,11 +23,12 @@ namespace ServiceLayer
         {
             return new TVShowListItem
             {
+                Id = series.Id,
                 Title = series.Title,
-                AverageRating = series.AverageRating,
+                AverageRating = series.AverageRating.HasValue ? Math.Round(series.AverageRating.Value, 1) : (double?)null,
                 ReleaseDate = series.ReleaseDate,
                 CoverPath = series.CoverPath,
-                EndDate = series.EndDate
+                EndDate = series.EndDate,
             };
         }
 

@@ -10,8 +10,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    [Migration("20210822193343_RemovedUnneccessaryUserProfileImage")]
-    partial class RemovedUnneccessaryUserProfileImage
+    [Migration("20210823191613_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -119,10 +119,10 @@ namespace DataLayer.Migrations
                     b.Property<DateTime>("ModifiedWhen")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<int>("MovieId")
+                    b.Property<int?>("MovieId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("SeriesId")
+                    b.Property<int?>("SeriesId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("TVShowId")
@@ -140,7 +140,11 @@ namespace DataLayer.Migrations
 
                     b.HasIndex("TVShowId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId", "MovieId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId", "SeriesId")
+                        .IsUnique();
 
                     b.ToTable("Ratings");
                 });
@@ -171,7 +175,7 @@ namespace DataLayer.Migrations
                     b.Property<int>("NumberOfSeasons")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Title")
@@ -201,6 +205,9 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<bool>("IsPrivate")
+                        .HasColumnType("boolean");
+
                     b.Property<DateTime>("ModifiedWhen")
                         .HasColumnType("timestamp without time zone");
 
@@ -208,9 +215,6 @@ namespace DataLayer.Migrations
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("bytea");
-
-                    b.Property<bool>("Private")
-                        .HasColumnType("boolean");
 
                     b.Property<byte[]>("Salt")
                         .IsRequired()
@@ -266,9 +270,7 @@ namespace DataLayer.Migrations
                 {
                     b.HasOne("Domain.Movie", null)
                         .WithMany("Ratings")
-                        .HasForeignKey("MovieId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MovieId");
 
                     b.HasOne("Domain.TVShow", null)
                         .WithMany("Ratings")

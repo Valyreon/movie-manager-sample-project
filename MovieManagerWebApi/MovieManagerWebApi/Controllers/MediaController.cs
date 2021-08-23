@@ -8,7 +8,7 @@ namespace MovieManagerWebApi.Controllers
 {
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
+    [AllowAnonymous]
     public class MediaController : ControllerBase
     {
         private readonly IMediaService mediaService;

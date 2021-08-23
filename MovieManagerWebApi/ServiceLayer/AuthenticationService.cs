@@ -83,7 +83,7 @@ namespace ServiceLayer
                 Username = request.Username,
                 Email = request.Email,
                 About = string.IsNullOrWhiteSpace(request.About) ? null : request.About,
-                Private = request.IsPrivate
+                IsPrivate = request.IsPrivate
             };
 
             newUser.SetPassword(request.Password);

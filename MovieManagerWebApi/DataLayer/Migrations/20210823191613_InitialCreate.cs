@@ -18,7 +18,10 @@ namespace DataLayer.Migrations
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table => table.PrimaryKey("PK_Actors", x => x.Id));
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actors", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Movies",
@@ -26,14 +29,17 @@ namespace DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CoverPath = table.Column<string>(type: "text", nullable: true)
+                    CoverPath = table.Column<string>(type: "text", nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table => table.PrimaryKey("PK_Movies", x => x.Id));
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Movies", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "TVShows",
@@ -41,16 +47,19 @@ namespace DataLayer.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     NumberOfSeasons = table.Column<int>(type: "integer", nullable: false),
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CoverPath = table.Column<string>(type: "text", nullable: true)
+                    CoverPath = table.Column<string>(type: "text", nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table => table.PrimaryKey("PK_TVShows", x => x.Id));
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TVShows", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Users",
@@ -62,13 +71,15 @@ namespace DataLayer.Migrations
                     Email = table.Column<string>(type: "text", nullable: false),
                     Salt = table.Column<byte[]>(type: "bytea", maxLength: 32, nullable: false),
                     PassHash = table.Column<byte[]>(type: "bytea", maxLength: 32, nullable: false),
-                    ProfileImage = table.Column<string>(type: "text", nullable: true),
                     About = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    Private = table.Column<bool>(type: "boolean", nullable: false),
+                    IsPrivate = table.Column<bool>(type: "boolean", nullable: false),
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "ActorMovie",
@@ -128,6 +139,7 @@ namespace DataLayer.Migrations
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     MovieId = table.Column<int>(type: "integer", nullable: true),
                     SeriesId = table.Column<int>(type: "integer", nullable: true),
+                    TVShowId = table.Column<int>(type: "integer", nullable: true),
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
@@ -139,13 +151,13 @@ namespace DataLayer.Migrations
                         column: x => x.MovieId,
                         principalTable: "Movies",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Ratings_TVShows_SeriesId",
-                        column: x => x.SeriesId,
+                        name: "FK_Ratings_TVShows_TVShowId",
+                        column: x => x.TVShowId,
                         principalTable: "TVShows",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Ratings_Users_UserId",
                         column: x => x.UserId,
@@ -170,14 +182,21 @@ namespace DataLayer.Migrations
                 column: "MovieId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_SeriesId",
+                name: "IX_Ratings_TVShowId",
                 table: "Ratings",
-                column: "SeriesId");
+                column: "TVShowId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_UserId",
+                name: "IX_Ratings_UserId_MovieId",
                 table: "Ratings",
-                column: "UserId");
+                columns: new[] { "UserId", "MovieId" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ratings_UserId_SeriesId",
+                table: "Ratings",
+                columns: new[] { "UserId", "SeriesId" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
