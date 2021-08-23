@@ -43,8 +43,8 @@ namespace DataLayer
             {
                 builder.InsertData(
                     "Ratings",
-                    new string[] { "Id", "Value", "UserId", "MovieId", "SeriesId", "ModifiedWhen", "CreatedWhen" },
-                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, rating.SeriesId, DateTime.Now, DateTime.Now });
+                    new string[] { "Id", "Value", "UserId", "MovieId", "TVShowId", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, rating.TVShowId, DateTime.Now, DateTime.Now });
             }
 
             foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)

@@ -56,7 +56,7 @@ namespace DataLayer
                    .IsUnique();
 
             modelBuilder.Entity<Rating>().HasIndex("UserId", "MovieId").IsUnique();
-            modelBuilder.Entity<Rating>().HasIndex("UserId", "SeriesId").IsUnique();
+            modelBuilder.Entity<Rating>().HasIndex("UserId", "TVShowId").IsUnique();
 
             // movie actors many to many
             modelBuilder.Entity<Movie>()

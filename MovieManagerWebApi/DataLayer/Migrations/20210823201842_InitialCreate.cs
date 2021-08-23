@@ -18,10 +18,7 @@ namespace DataLayer.Migrations
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Actors", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Actors", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Movies",
@@ -36,10 +33,7 @@ namespace DataLayer.Migrations
                     CoverPath = table.Column<string>(type: "text", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movies", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Movies", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "TVShows",
@@ -56,10 +50,7 @@ namespace DataLayer.Migrations
                     CoverPath = table.Column<string>(type: "text", nullable: true),
                     ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TVShows", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_TVShows", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "Users",
@@ -76,10 +67,7 @@ namespace DataLayer.Migrations
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
-                });
+                constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
 
             migrationBuilder.CreateTable(
                 name: "ActorMovie",
@@ -138,7 +126,6 @@ namespace DataLayer.Migrations
                     Value = table.Column<byte>(type: "smallint", nullable: false),
                     UserId = table.Column<int>(type: "integer", nullable: false),
                     MovieId = table.Column<int>(type: "integer", nullable: true),
-                    SeriesId = table.Column<int>(type: "integer", nullable: true),
                     TVShowId = table.Column<int>(type: "integer", nullable: true),
                     ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
@@ -193,9 +180,9 @@ namespace DataLayer.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Ratings_UserId_SeriesId",
+                name: "IX_Ratings_UserId_TVShowId",
                 table: "Ratings",
-                columns: new[] { "UserId", "SeriesId" },
+                columns: new[] { "UserId", "TVShowId" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

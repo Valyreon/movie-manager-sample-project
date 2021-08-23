@@ -23,8 +23,8 @@ namespace DataLayer
                 user.SetPassword("Default123");
             }
 
-            GenerateRatings((r, id) => r.MovieId = id, 15, 12);
-            GenerateRatings((r, id) => r.SeriesId = id, 13, 8);
+            GenerateRatings((r, id) => r.MovieId = id, movies.Count, 12);
+            GenerateRatings((r, id) => r.TVShowId = id, tvShows.Count, 8);
 
             for (var i = 0; i < actorNames.Count; i++)
             {

@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataLayer.Migrations
 {
     [DbContext(typeof(MovieDbContext))]
-    [Migration("20210823191613_InitialCreate")]
+    [Migration("20210823201842_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -122,9 +122,6 @@ namespace DataLayer.Migrations
                     b.Property<int?>("MovieId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SeriesId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("TVShowId")
                         .HasColumnType("integer");
 
@@ -143,7 +140,7 @@ namespace DataLayer.Migrations
                     b.HasIndex("UserId", "MovieId")
                         .IsUnique();
 
-                    b.HasIndex("UserId", "SeriesId")
+                    b.HasIndex("UserId", "TVShowId")
                         .IsUnique();
 
                     b.ToTable("Ratings");

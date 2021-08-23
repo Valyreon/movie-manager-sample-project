@@ -15,6 +15,6 @@ namespace Domain
 
         public int? MovieId { get; set; }
 
-        public int? SeriesId { get; set; }
+        public int? TVShowId { get; set; }
     }
 }

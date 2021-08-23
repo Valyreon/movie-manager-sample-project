@@ -120,9 +120,6 @@ namespace DataLayer.Migrations
                     b.Property<int?>("MovieId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("SeriesId")
-                        .HasColumnType("integer");
-
                     b.Property<int?>("TVShowId")
                         .HasColumnType("integer");
 
@@ -141,7 +138,7 @@ namespace DataLayer.Migrations
                     b.HasIndex("UserId", "MovieId")
                         .IsUnique();
 
-                    b.HasIndex("UserId", "SeriesId")
+                    b.HasIndex("UserId", "TVShowId")
                         .IsUnique();
 
                     b.ToTable("Ratings");

@@ -1,3 +1,4 @@
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces;
@@ -19,11 +20,27 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<MediaPageResponse> SearchTopRatedMedia([FromQuery] SearchMediaRequest request)
+        public ActionResult<MoviePageResponse> SearchTopRatedMovies([FromQuery] SearchMediaRequest request)
         {
-            return request.Movies
-                ? mediaService.SearchTopRatedMovies(request.Token, request.PageNumber, request.PageSize)
-                : mediaService.SearchTopRatedTVShows(request.Token, request.PageNumber, request.PageSize);
+            return mediaService.SearchTopRatedMovies(request.Token, request.PageNumber, request.PageSize);
+        }
+
+        [HttpGet]
+        public ActionResult<TVShowPageResponse> SearchTopRatedTVShows([FromQuery] SearchMediaRequest request)
+        {
+            return mediaService.SearchTopRatedTVShows(request.Token, request.PageNumber, request.PageSize);
+        }
+
+        [HttpGet]
+        public ActionResult<MediaDetailsResponse> GetMovieDetails([FromQuery][Required] int id)
+        {
+            return mediaService.GetMovieDetails(id);
+        }
+
+        [HttpGet]
+        public ActionResult<MediaDetailsResponse> GetTVShowDetails([FromQuery][Required] int id)
+        {
+            return mediaService.GetTVShowDetails(id);
         }
     }
 }
