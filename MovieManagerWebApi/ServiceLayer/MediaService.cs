@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using DataLayer.Interfaces;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Responses;

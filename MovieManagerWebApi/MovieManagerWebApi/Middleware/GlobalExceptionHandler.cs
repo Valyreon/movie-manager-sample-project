@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,7 +28,6 @@ namespace MovieManagerWebApi.Middleware
 
                 response.StatusCode = error switch
                 {
-                    KeyNotFoundException _ => (int)HttpStatusCode.NotFound,// not found error
                     _ => (int)HttpStatusCode.InternalServerError,// unhandled error
                 };
 

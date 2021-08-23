@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Requests;
 using ServiceLayer.Responses;
 
 namespace MovieManagerWebApi.Controllers
@@ -18,15 +19,11 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<MediaPageResponse> SearchTopRatedMedia(
-            [FromQuery] bool movies = true,
-            [FromQuery] string token = null,
-            [FromQuery] int pageNumber = 0,
-            [FromQuery] int pageSize = 10)
+        public ActionResult<MediaPageResponse> SearchTopRatedMedia([FromQuery] SearchMediaRequest request)
         {
-            return movies
-                ? mediaService.SearchTopRatedMovies(token, pageNumber, pageSize)
-                : mediaService.SearchTopRatedTVShows(token, pageNumber, pageSize);
+            return request.Movies
+                ? mediaService.SearchTopRatedMovies(request.Token, request.PageNumber, request.PageSize)
+                : mediaService.SearchTopRatedTVShows(request.Token, request.PageNumber, request.PageSize);
         }
     }
 }

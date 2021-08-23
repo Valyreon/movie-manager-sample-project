@@ -24,7 +24,8 @@ namespace DataLayer.Repositories
 
         public (IEnumerable<T> PageItems, int TotalNumberOfPages) SearchTopRated(string token = null, int pageNumber = 0, int itemsPerPage = 10)
         {
-            var query = context.Set<T>().Include(m => m.Ratings).Select(m => new { Media = m, AverageRating = (double?)m.Ratings.Average(r => r.Value) });
+            var query = context.Set<T>().Include(m => m.Ratings)
+                    .Select(m => new { Media = m, AverageRating = (double?)m.Ratings.Average(r => r.Value) });
 
             var specificStarsRegex = new Regex("^([1-5]) stars$");
             var atLeastStarsRegex = new Regex("^at least ([1-5]) star(s)?$");
@@ -75,10 +76,10 @@ namespace DataLayer.Repositories
 
         private int CalculateNumberOfPages(int totalNumber, int pageSize)
         {
-            var nbFullyFilledPages = totalNumber / pageSize;
-            var nbPartiallyFilledPages = (totalNumber % pageSize == 0) ? 0 : 1;
+            var fullPages = totalNumber / pageSize;
+            var partialPages = (totalNumber % pageSize == 0) ? 0 : 1;
 
-            return nbFullyFilledPages + nbPartiallyFilledPages;
+            return fullPages + partialPages;
         }
     }
 }
