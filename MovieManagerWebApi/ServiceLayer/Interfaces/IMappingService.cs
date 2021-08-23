@@ -1,11 +1,14 @@
 using Domain;
+using ServiceLayer.Responses;
 using ServiceLayer.Responses.JsonModels;
 
 namespace ServiceLayer.Interfaces
 {
     public interface IMappingService
     {
-        MediaListItem MapMovieToListItem(Movie movie);
-        MediaListItem MapTVShowToListItem(TVShow series);
+        MovieListItem MapMovieToListItem(Movie movie);
+        TVShowListItem MapTVShowToListItem(TVShow series);
+        MovieDetailsResponse MapMovieToDetailsResponse(Movie movie);
+        TVShowDetailsResponse MapTVShowToDetailsResponse(TVShow series);
     }
 }

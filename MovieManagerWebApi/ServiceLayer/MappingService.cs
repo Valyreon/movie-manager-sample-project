@@ -9,29 +9,16 @@ namespace ServiceLayer
 {
     public class MappingService : IMappingService
     {
-        public MediaListItem MapMovieToListItem(Movie movie)
+        public MovieListItem MapMovieToListItem(Movie movie)
         {
-            return new MediaListItem
-            {
-                Id = movie.Id,
-                Title = movie.Title,
-                AverageRating = movie.AverageRating.HasValue ? Math.Round(movie.AverageRating.Value, 1) : (double?)null,
-                ReleaseDate = movie.ReleaseDate,
-                CoverPath = movie.CoverPath
-            };
+            return MapMediaToListItem(movie) as MovieListItem;
         }
 
-        public MediaListItem MapTVShowToListItem(TVShow series)
+        public TVShowListItem MapTVShowToListItem(TVShow series)
         {
-            return new TVShowListItem
-            {
-                Id = series.Id,
-                Title = series.Title,
-                AverageRating = series.AverageRating.HasValue ? Math.Round(series.AverageRating.Value, 1) : (double?)null,
-                ReleaseDate = series.ReleaseDate,
-                CoverPath = series.CoverPath,
-                EndDate = series.EndDate,
-            };
+            var res = MapMediaToListItem(series) as TVShowListItem;
+            res.EndYear = series.EndDate.Year;
+            return res;
         }
 
         public RatingData MapRatingToRatingData(Rating rating)
@@ -44,34 +31,49 @@ namespace ServiceLayer
             };
         }
 
-        public MediaDetailsResponse MapMovieToDetailsResponse(Movie movie)
+        public MovieDetailsResponse MapMovieToDetailsResponse(Movie movie)
         {
-            return new MediaDetailsResponse
-            {
-                Id = movie.Id,
-                Actors = movie.Actors.Select(a => a.Name),
-                Ratings = movie.Ratings.Select(MapRatingToRatingData),
-                Description = movie.Description,
-                AverageRating = movie.AverageRating.HasValue ? Math.Round(movie.AverageRating.Value, 1) : (double?)null,
-                ReleaseDate = movie.ReleaseDate,
-                CoverPath = movie.CoverPath,
-                Title = movie.Title
-            };
+            return MapMediaToDetailsResponse(movie) as MovieDetailsResponse;
         }
 
-        public MediaDetailsResponse MapTVShowToDetailsResponse(TVShow series)
+        public TVShowDetailsResponse MapTVShowToDetailsResponse(TVShow series)
         {
-            return new MediaDetailsResponse
-            {
-                Id = series.Id,
-                Actors = series.Actors.Select(a => a.Name),
-                Ratings = series.Ratings.Select(MapRatingToRatingData),
-                Description = series.Description,
-                AverageRating = series.AverageRating.HasValue ? Math.Round(series.AverageRating.Value, 1) : (double?)null,
-                ReleaseDate = series.ReleaseDate,
-                CoverPath = series.CoverPath,
-                Title = series.Title
-            };
+            var res = MapMediaToDetailsResponse(series) as TVShowDetailsResponse;
+            res.EndYear = series.EndDate.Year;
+            res.NumberOfSeasons = series.NumberOfSeasons;
+            return res;
+        }
+
+        private MediaDetailsResponse MapMediaToDetailsResponse(Multimedia media)
+        {
+            var res = media is Movie
+                            ? new MovieDetailsResponse()
+                            : (MediaDetailsResponse)new TVShowDetailsResponse();
+
+            res.Id = media.Id;
+            res.Actors = media.Actors.Select(a => a.Name);
+            res.Ratings = media.Ratings.Select(MapRatingToRatingData);
+            res.Description = media.Description;
+            res.AverageRating = media.AverageRating.HasValue ? Math.Round(media.AverageRating.Value, 1) : (double?)null;
+            res.ReleaseYear = media.ReleaseDate.Year;
+            res.CoverPath = media.CoverPath;
+            res.Title = media.Title;
+
+            return res;
+        }
+
+        private MediaListItem MapMediaToListItem(Multimedia media)
+        {
+            var res = media is Movie
+                            ? new MovieListItem()
+                            : (MediaListItem)new TVShowListItem();
+
+            res.Id = media.Id;
+            res.Title = media.Title;
+            res.ReleaseYear = media.ReleaseDate.Year;
+            res.CoverPath = media.CoverPath;
+            res.AverageRating = media.AverageRating;
+            return res;
         }
     }
 }

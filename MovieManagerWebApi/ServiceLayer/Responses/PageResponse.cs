@@ -3,11 +3,11 @@ using ServiceLayer.Responses.JsonModels;
 
 namespace ServiceLayer.Responses
 {
-    public class MediaPageResponse
+    public abstract class MediaPageResponse<T> where T : MediaListItem
     {
-        public IEnumerable<MediaListItem> Items { get; set; }
+        public virtual IEnumerable<T> Items { get; set; }
         public int PageNumber { get; set; }
-        public int TotalNumberOfPages { get; set; }
+        public int TotalPages { get; set; }
         public int PageSize { get; set; }
     }
 }
