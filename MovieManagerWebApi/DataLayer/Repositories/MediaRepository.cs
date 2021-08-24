@@ -8,8 +8,23 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Repositories
 {
+    internal class RatedMedia<T>
+    {
+        public T Media { get; internal set; }
+        public double? AverageRating { get; internal set; }
+    }
+
     public abstract class MediaRepository<T> : GenericRepository<T>, IMediaRepository<T> where T : Multimedia
     {
+        private static readonly IReadOnlyDictionary<Regex, Func<IQueryable<RatedMedia<T>>, string, IQueryable<RatedMedia<T>>>> regexQueryDict
+            = new Dictionary<Regex, Func<IQueryable<RatedMedia<T>>, string, IQueryable<RatedMedia<T>>>>
+        {
+                { new Regex("^([1-5]) stars$"), ApplySpecificStarQuery },
+                { new Regex("^at least ([1-5]) star(s)?$"), ApplyAtLeastStarsQuery },
+                { new Regex(@"^after (\d{4})$"), ApplyAfterYearQuery },
+                { new Regex(@"^older than (\d+) years$"), ApplyOlderThanQuery }
+        };
+
         public MediaRepository(MovieDbContext context) : base(context)
         {
         }
@@ -24,46 +39,30 @@ namespace DataLayer.Repositories
 
         public (IEnumerable<T> PageItems, int TotalNumberOfPages) SearchTopRated(string token = null, int pageNumber = 0, int itemsPerPage = 10)
         {
-            var query = context.Set<T>().Include(m => m.Ratings)
-                    .Select(m => new { Media = m, AverageRating = (double?)m.Ratings.Average(r => r.Value) });
+            var ratingIdSelector = typeof(Movie).IsAssignableFrom(typeof(T))
+                                            ? ((Rating r) => r.Movie as T)
+                                            : (Func<Rating, T>)((Rating r) => r.TVShow as T);
 
-            var specificStarsRegex = new Regex("^([1-5]) stars$");
-            var atLeastStarsRegex = new Regex("^at least ([1-5]) star(s)?$");
-            var afterYearRegex = new Regex(@"^after (\d{4})$");
-            var olderThanRegex = new Regex(@"^older than (\d+) years$");
-            Match match = null;
+            var query = context.Set<T>().Include(m => m.Ratings)
+                    .Select(m => new RatedMedia<T> { Media = m, AverageRating = m.Ratings.Average(r => r.Value) });
 
             var trimmedToken = token == null ? "" : token.Trim();
-            if ((match = specificStarsRegex.Match(trimmedToken)).Success)
+            var matchingRegexFound = false;
+            foreach (var regex in regexQueryDict.Keys)
             {
-                var stars = int.Parse(match.Groups[1].Value);
-
-                query = query.Where(a => a.AverageRating > stars - 0.5 && a.AverageRating <= stars + 0.5);
+                var match = regex.Match(trimmedToken);
+                if (matchingRegexFound = match.Success)
+                {
+                    query = regexQueryDict[regex](query, trimmedToken);
+                    break;
+                }
             }
-            else if ((match = atLeastStarsRegex.Match(trimmedToken)).Success)
-            {
-                var stars = int.Parse(match.Groups[1].Value);
 
-                query = query.Where(m => m.AverageRating >= stars)
-                             .OrderByDescending(m => m.AverageRating);
-            }
-            else if ((match = afterYearRegex.Match(trimmedToken)).Success)
+            if (!matchingRegexFound && !string.IsNullOrWhiteSpace(trimmedToken))
             {
-                var year = int.Parse(match.Groups[1].Value);
-                var afterDate = new DateTime(year, 12, 31);
-
-                query = query.Where(m => m.Media.ReleaseDate > afterDate);
-            }
-            else if ((match = olderThanRegex.Match(trimmedToken)).Success)
-            {
-                var years = int.Parse(match.Groups[1].Value);
-                var beforeDate = DateTime.Now.AddYears(-years);
-
-                query = query.Where(m => m.Media.ReleaseDate < beforeDate);
-            }
-            else if (!string.IsNullOrWhiteSpace(trimmedToken))
-            {
-                query = query.Where(m => EF.Functions.ILike(m.Media.Title, $"%{token}%") || EF.Functions.ILike(m.Media.Description, $"%{token}%"));
+                query = query.Where(
+                    m => EF.Functions.Like(m.Media.Title, $"%{token}%")
+                                || EF.Functions.Like(m.Media.Description, $"%{token}%"));
             }
 
             var resultItems = query.OrderByDescending(m => m.AverageRating.HasValue)
@@ -72,6 +71,34 @@ namespace DataLayer.Repositories
                                    .Take(itemsPerPage);
 
             return (resultItems.Select(m => m.Media), CalculateNumberOfPages(query.Count(), itemsPerPage));
+        }
+
+        private static IQueryable<RatedMedia<T>> ApplySpecificStarQuery(IQueryable<RatedMedia<T>> query, string numberOfStars)
+        {
+            var stars = int.Parse(numberOfStars);
+            return query.Where(a => a.AverageRating > stars - 0.5 && a.AverageRating <= stars + 0.5);
+        }
+
+        private static IQueryable<RatedMedia<T>> ApplyAtLeastStarsQuery(IQueryable<RatedMedia<T>> query, string numberOfStars)
+        {
+            var stars = int.Parse(numberOfStars);
+            return query.Where(a => a.AverageRating >= stars);
+        }
+
+        private static IQueryable<RatedMedia<T>> ApplyAfterYearQuery(IQueryable<RatedMedia<T>> query, string yearString)
+        {
+            var year = int.Parse(yearString);
+            var afterDate = new DateTime(year, 12, 31);
+
+            return query.Where(m => m.Media.ReleaseDate > afterDate);
+        }
+
+        private static IQueryable<RatedMedia<T>> ApplyOlderThanQuery(IQueryable<RatedMedia<T>> query, string yearString)
+        {
+            var years = int.Parse(yearString);
+            var beforeDate = DateTime.Now.AddYears(-years);
+
+            return query.Where(m => m.Media.ReleaseDate < beforeDate);
         }
 
         private int CalculateNumberOfPages(int totalNumber, int pageSize)

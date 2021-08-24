@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Domain;
 using ServiceLayer.Interfaces;
@@ -50,11 +50,13 @@ namespace ServiceLayer
                             ? new MovieDetailsResponse()
                             : (MediaDetailsResponse)new TVShowDetailsResponse();
 
+            var averageRating = media.CalculateAverageRating();
+
             res.Id = media.Id;
             res.Actors = media.Actors.Select(a => a.Name);
             res.Ratings = media.Ratings.Select(MapRatingToRatingData);
             res.Description = media.Description;
-            res.AverageRating = media.AverageRating.HasValue ? Math.Round(media.AverageRating.Value, 1) : (double?)null;
+            res.AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null;
             res.ReleaseYear = media.ReleaseDate.Year;
             res.CoverPath = media.CoverPath;
             res.Title = media.Title;
@@ -68,11 +70,13 @@ namespace ServiceLayer
                             ? new MovieListItem()
                             : (MediaListItem)new TVShowListItem();
 
+            var averageRating = media.CalculateAverageRating();
+
             res.Id = media.Id;
             res.Title = media.Title;
             res.ReleaseYear = media.ReleaseDate.Year;
             res.CoverPath = media.CoverPath;
-            res.AverageRating = media.AverageRating;
+            res.AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null;
             return res;
         }
     }

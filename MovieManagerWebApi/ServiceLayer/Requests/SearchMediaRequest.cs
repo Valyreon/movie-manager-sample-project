@@ -4,7 +4,6 @@ namespace ServiceLayer.Requests
 {
     public class SearchMediaRequest
     {
-        public bool Movies { get; set; } = true;
         [RegularExpression("^[\\ a-zA-Z0-9]{2,}$")]
         public string Token { get; set; }
         [Range(0, int.MaxValue)]

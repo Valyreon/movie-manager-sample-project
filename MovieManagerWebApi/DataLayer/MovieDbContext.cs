@@ -26,6 +26,7 @@ namespace DataLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.LogTo(LogStuff);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -36,7 +37,7 @@ namespace DataLayer
                 .AddJsonFile("appsettings.json")
                 .Build();
             var connectionString = configuration.GetConnectionString("MoviesDatabase");
-            optionsBuilder.UseNpgsql(connectionString);
+            optionsBuilder.UseSqlServer(connectionString);
         }
 
         public static void LogStuff(string value)

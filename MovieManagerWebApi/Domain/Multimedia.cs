@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace Domain
@@ -18,18 +17,14 @@ namespace Domain
         public ICollection<Actor> Actors { get; set; }
         public ICollection<Rating> Ratings { get; set; }
 
-        [NotMapped]
-        public double? AverageRating
+        public double? CalculateAverageRating()
         {
-            get
+            if (Ratings?.Any() != true)
             {
-                if (Ratings?.Any() != true)
-                {
-                    return null;
-                }
-
-                return Ratings.Select(r => Convert.ToDouble(r.Value)).Average();
+                return null;
             }
+
+            return Ratings.Select(r => Convert.ToDouble(r.Value)).Average();
         }
     }
 }

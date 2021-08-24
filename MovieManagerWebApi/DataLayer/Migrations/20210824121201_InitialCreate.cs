@@ -1,6 +1,5 @@
 using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataLayer.Migrations
 {
@@ -12,11 +11,11 @@ namespace DataLayer.Migrations
                 name: "Actors",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    ModifiedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table => table.PrimaryKey("PK_Actors", x => x.Id));
 
@@ -24,14 +23,14 @@ namespace DataLayer.Migrations
                 name: "Movies",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CoverPath = table.Column<string>(type: "text", nullable: true),
-                    ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModifiedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CoverPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table => table.PrimaryKey("PK_Movies", x => x.Id));
 
@@ -39,16 +38,16 @@ namespace DataLayer.Migrations
                 name: "TVShows",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    NumberOfSeasons = table.Column<int>(type: "integer", nullable: false),
-                    ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    CoverPath = table.Column<string>(type: "text", nullable: true),
-                    ReleaseDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    NumberOfSeasons = table.Column<int>(type: "int", nullable: false),
+                    ModifiedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    CoverPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table => table.PrimaryKey("PK_TVShows", x => x.Id));
 
@@ -56,16 +55,16 @@ namespace DataLayer.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Username = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    Salt = table.Column<byte[]>(type: "bytea", maxLength: 32, nullable: false),
-                    PassHash = table.Column<byte[]>(type: "bytea", maxLength: 32, nullable: false),
-                    About = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
-                    IsPrivate = table.Column<bool>(type: "boolean", nullable: false),
-                    ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Salt = table.Column<byte[]>(type: "varbinary(32)", maxLength: 32, nullable: false),
+                    PassHash = table.Column<byte[]>(type: "varbinary(32)", maxLength: 32, nullable: false),
+                    About = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    IsPrivate = table.Column<bool>(type: "bit", nullable: false),
+                    ModifiedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table => table.PrimaryKey("PK_Users", x => x.Id));
 
@@ -73,8 +72,8 @@ namespace DataLayer.Migrations
                 name: "ActorMovie",
                 columns: table => new
                 {
-                    ActorsId = table.Column<int>(type: "integer", nullable: false),
-                    StarredInMoviesId = table.Column<int>(type: "integer", nullable: false)
+                    ActorsId = table.Column<int>(type: "int", nullable: false),
+                    StarredInMoviesId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -97,8 +96,8 @@ namespace DataLayer.Migrations
                 name: "ActorTVShow",
                 columns: table => new
                 {
-                    ActorsId = table.Column<int>(type: "integer", nullable: false),
-                    StarredInTvShowsId = table.Column<int>(type: "integer", nullable: false)
+                    ActorsId = table.Column<int>(type: "int", nullable: false),
+                    StarredInTvShowsId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,14 +120,14 @@ namespace DataLayer.Migrations
                 name: "Ratings",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Value = table.Column<byte>(type: "smallint", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
-                    MovieId = table.Column<int>(type: "integer", nullable: true),
-                    TVShowId = table.Column<int>(type: "integer", nullable: true),
-                    ModifiedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    CreatedWhen = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Value = table.Column<byte>(type: "tinyint", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    MovieId = table.Column<int>(type: "int", nullable: true),
+                    TVShowId = table.Column<int>(type: "int", nullable: true),
+                    ModifiedWhen = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedWhen = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,13 +176,15 @@ namespace DataLayer.Migrations
                 name: "IX_Ratings_UserId_MovieId",
                 table: "Ratings",
                 columns: new[] { "UserId", "MovieId" },
-                unique: true);
+                unique: true,
+                filter: "[MovieId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ratings_UserId_TVShowId",
                 table: "Ratings",
                 columns: new[] { "UserId", "TVShowId" },
-                unique: true);
+                unique: true,
+                filter: "[TVShowId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",
