@@ -1,5 +1,6 @@
 using DataLayer.Enums;
 using Newtonsoft.Json.Converters;
+using ServiceLayer.Attributes;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
@@ -13,11 +14,8 @@ namespace ServiceLayer.Requests
         public int PageNumber { get; set; } = 0;
         [Range(1, 100)]
         public int PageSize { get; set; } = 10;
-        [EnumDataType(typeof(MoviesOrderBy))]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public MoviesOrderBy OrderBy { get; set; } = MoviesOrderBy.Rating;
-        [EnumDataType(typeof(OrderDirection))]
-        [JsonConverter(typeof(StringEnumConverter))]
-        public OrderDirection OrderDirection { get; set; } = OrderDirection.Descending;
+        [AllowedStringValues("title", "rating", "release")]
+        public string OrderBy { get; set; } = "rating";
+        public bool Ascending { get; set; } = false;
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DataLayer.Enums;
 using DataLayer.Parameters;
 using Domain;
 using ServiceLayer.Interfaces;
@@ -67,8 +68,29 @@ namespace ServiceLayer
                 Token = request.Token,
                 PageNumber = request.PageNumber,
                 PageSize = request.PageSize,
-                OrderBy = request.OrderBy,
-                OrderDirection = request.OrderDirection
+                OrderBy = MapMoviesOrderByStringToEnum(request.OrderBy),
+                Ascending = request.Ascending
+            };
+        }
+
+        public MoviesOrderBy MapMoviesOrderByStringToEnum(string str)
+        {
+            return str.ToLower() switch
+            {
+                "title" => MoviesOrderBy.Title,
+                "rating" => MoviesOrderBy.Rating,
+                "release" => MoviesOrderBy.Release,
+                _ => throw new NotSupportedException($"'{str}' is not an available MoviesOrderBy enum."),
+            };
+        }
+
+        public OrderDirection MapMoviesOrderDirectionStringToEnum(string str)
+        {
+            return str.ToLower() switch
+            {
+                "asc" => OrderDirection.Ascending,
+                "desc" => OrderDirection.Descending,
+                _ => throw new NotSupportedException($"'{str}' is not a valid order."),
             };
         }
     }

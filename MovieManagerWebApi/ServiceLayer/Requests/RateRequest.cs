@@ -7,7 +7,7 @@ namespace ServiceLayer.Requests
     {
         [Required]
         [Range(1, int.MaxValue)]
-        public int MediaId { get; set; }
+        public int MovieId { get; set; }
         [Required]
         [Range(1, 5)]
         public byte Value { get; set; }

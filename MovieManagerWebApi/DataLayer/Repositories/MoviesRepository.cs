@@ -65,35 +65,32 @@ namespace DataLayer.Repositories
             }
 
             // ordering and paging
-            var resultItems = SetOrder(query, parameters.OrderBy, parameters.OrderDirection)
+            var resultItems = SetOrder(query, parameters.OrderBy, parameters.Ascending)
                                    .Skip(parameters.PageNumber * parameters.PageSize)
                                    .Take(parameters.PageSize);
 
             return (resultItems.Select(m => m.Movie), CalculateNumberOfPages(query.Count(), parameters.PageSize));
         }
 
-        private IEnumerable<RatedMovie> SetOrder(IQueryable<RatedMovie> query, MoviesOrderBy orderBy, OrderDirection orderDirection)
+        private IEnumerable<RatedMovie> SetOrder(IQueryable<RatedMovie> query, MoviesOrderBy orderBy, bool ascending)
         {
             switch(orderBy)
             {
                 case MoviesOrderBy.Title:
                     Func<RatedMovie, string> titleSelector = r => r.Movie.Title;
-                    return (orderDirection == OrderDirection.Ascending
-                            ? query.OrderBy(titleSelector)
-                            : query.OrderByDescending(titleSelector));
+                    return (ascending ? query.OrderBy(titleSelector)
+                                      : query.OrderByDescending(titleSelector));
                 case MoviesOrderBy.Rating:
                     Func<RatedMovie, bool> ratingSelectorHasValue = r => r.AverageRating.HasValue;
                     Func<RatedMovie, double?> ratingSelector = r => r.AverageRating;
-                    return orderDirection == OrderDirection.Ascending
-                            ? query.OrderBy(ratingSelectorHasValue)
-                                   .ThenBy(ratingSelector)
-                            : query.OrderByDescending(ratingSelectorHasValue)
-                                   .ThenByDescending(ratingSelector);
+                    return ascending ? query.OrderBy(ratingSelectorHasValue)
+                                            .ThenBy(ratingSelector)
+                                     : query.OrderByDescending(ratingSelectorHasValue)
+                                            .ThenByDescending(ratingSelector);
                 case MoviesOrderBy.Release:
                     Func<RatedMovie, DateTime> releaseSelector = r => r.Movie.ReleaseDate;
-                    return (orderDirection == OrderDirection.Ascending
-                            ? query.OrderBy(releaseSelector)
-                            : query.OrderByDescending(releaseSelector));
+                    return (ascending ? query.OrderBy(releaseSelector)
+                                      : query.OrderByDescending(releaseSelector));
                 default:
                     throw new NotSupportedException("Unhandled enum.");
             }

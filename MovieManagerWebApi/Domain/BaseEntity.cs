@@ -8,8 +8,8 @@ namespace Domain
         [Key]
         public int Id { get; set; }
         [Required]
-        public DateTime ModifiedWhen { get; set; }
+        public DateTimeOffset ModifiedWhen { get; set; }
         [Required]
-        public DateTime CreatedWhen { get; set; }
+        public DateTimeOffset CreatedWhen { get; set; }
     }
 }

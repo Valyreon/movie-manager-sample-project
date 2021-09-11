@@ -39,14 +39,14 @@ namespace ServiceLayer
                 throw new Exception("Invalid user."); // custom exception
             }
 
-            var movie = uow.Movies.GetById(request.MediaId);
+            var movie = uow.Movies.GetById(request.MovieId);
 
             if (movie == null)
             {
                 throw new Exception("Invalid mvoie id."); //Custom exception
             }
 
-            var rating = uow.Ratings.GetRatingForMovie(request.MediaId, user.Id);
+            var rating = uow.Ratings.GetRatingForMovie(request.MovieId, user.Id);
 
             if (rating != null)
             {
@@ -55,7 +55,7 @@ namespace ServiceLayer
                 return;
             }
 
-            rating = new Domain.Rating { UserId = user.Id, MovieId = request.MediaId, Value = request.Value };
+            rating = new Domain.Rating { UserId = user.Id, MovieId = request.MovieId, Value = request.Value };
             uow.Ratings.Add(rating);
             uow.Commit();
         }

@@ -10,6 +10,6 @@ namespace DataLayer.Parameters
         public string Token { get; set; }
         public int PageNumber { get; set; } = 0;
         public int PageSize { get; set; } = 10;
-        public OrderDirection OrderDirection { get; set; } = OrderDirection.Descending;
+        public bool Ascending { get; set; } = false;
     }
 }
