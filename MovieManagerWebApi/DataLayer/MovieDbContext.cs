@@ -19,14 +19,13 @@ namespace DataLayer
         }
 
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<TVShow> TVShows { get; set; }
         public DbSet<Rating> Ratings { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.LogTo(LogStuff);
+            //optionsBuilder.LogTo(LogStuff);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -65,16 +64,8 @@ namespace DataLayer
                         .WithMany(d => d.StarredInMovies)
                         .UsingEntity(j => j.ToTable("ActorMovie"));
 
-            modelBuilder.Entity<TVShow>()
-                        .HasMany(m => m.Actors)
-                        .WithMany(d => d.StarredInTvShows)
-                        .UsingEntity(j => j.ToTable("ActorTVShow"));
-
             // movie has many reviews
             modelBuilder.Entity<Movie>().HasMany(m => m.Ratings);
-
-            // tvshow has many reviews
-            modelBuilder.Entity<TVShow>().HasMany(m => m.Ratings);
 
             // user has many reviews
             modelBuilder.Entity<User>().HasMany(m => m.Ratings);

@@ -1,7 +1,9 @@
 using System;
 using System.Linq;
+using DataLayer.Parameters;
 using Domain;
 using ServiceLayer.Interfaces;
+using ServiceLayer.Requests;
 using ServiceLayer.Responses;
 using ServiceLayer.Responses.JsonModels;
 
@@ -11,13 +13,20 @@ namespace ServiceLayer
     {
         public MovieListItem MapMovieToListItem(Movie movie)
         {
-            return MapMediaToListItem(movie) as MovieListItem;
-        }
 
-        public TVShowListItem MapTVShowToListItem(TVShow series)
-        {
-            var res = MapMediaToListItem(series) as TVShowListItem;
-            res.EndYear = series.EndDate.Year;
+            var averageRating = movie.CalculateAverageRating();
+
+            var res = new MovieListItem
+            {
+                Id = movie.Id,
+                Title = movie.Title,
+                ReleaseYear = movie.ReleaseDate.Year,
+                CoverPath = movie.CoverPath,
+                AverageRating = averageRating.HasValue 
+                                        ? Math.Round(averageRating.Value, 1) 
+                                        : (double?)null
+            };
+
             return res;
         }
 
@@ -33,51 +42,34 @@ namespace ServiceLayer
 
         public MovieDetailsResponse MapMovieToDetailsResponse(Movie movie)
         {
-            return MapMediaToDetailsResponse(movie) as MovieDetailsResponse;
-        }
 
-        public TVShowDetailsResponse MapTVShowToDetailsResponse(TVShow series)
-        {
-            var res = MapMediaToDetailsResponse(series) as TVShowDetailsResponse;
-            res.EndYear = series.EndDate.Year;
-            res.NumberOfSeasons = series.NumberOfSeasons;
-            return res;
-        }
+            var averageRating = movie.CalculateAverageRating();
 
-        private MediaDetailsResponse MapMediaToDetailsResponse(Multimedia media)
-        {
-            var res = media is Movie
-                            ? new MovieDetailsResponse()
-                            : (MediaDetailsResponse)new TVShowDetailsResponse();
-
-            var averageRating = media.CalculateAverageRating();
-
-            res.Id = media.Id;
-            res.Actors = media.Actors.Select(a => a.Name);
-            res.Ratings = media.Ratings.Select(MapRatingToRatingData);
-            res.Description = media.Description;
-            res.AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null;
-            res.ReleaseYear = media.ReleaseDate.Year;
-            res.CoverPath = media.CoverPath;
-            res.Title = media.Title;
+            var res = new MovieDetailsResponse
+            {
+                Id = movie.Id,
+                Actors = movie.Actors.Select(a => a.Name),
+                Ratings = movie.Ratings.Select(MapRatingToRatingData),
+                Description = movie.Description,
+                AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null,
+                ReleaseYear = movie.ReleaseDate.Year,
+                CoverPath = movie.CoverPath,
+                Title = movie.Title
+            };
 
             return res;
         }
 
-        private MediaListItem MapMediaToListItem(Multimedia media)
+        public MoviesPagingParameters MapPageRequestToParameters(MoviePageRequest request)
         {
-            var res = media is Movie
-                            ? new MovieListItem()
-                            : (MediaListItem)new TVShowListItem();
-
-            var averageRating = media.CalculateAverageRating();
-
-            res.Id = media.Id;
-            res.Title = media.Title;
-            res.ReleaseYear = media.ReleaseDate.Year;
-            res.CoverPath = media.CoverPath;
-            res.AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null;
-            return res;
+            return new MoviesPagingParameters
+            {
+                Token = request.Token,
+                PageNumber = request.PageNumber,
+                PageSize = request.PageSize,
+                OrderBy = request.OrderBy,
+                OrderDirection = request.OrderDirection
+            };
         }
     }
 }

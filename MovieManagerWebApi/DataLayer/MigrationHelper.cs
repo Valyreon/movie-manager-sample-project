@@ -15,13 +15,13 @@ namespace DataLayer
                     new object[] { movie.Id, movie.Title, movie.Description, movie.ReleaseDate, DateTime.Now, DateTime.Now });
             }
 
-            foreach (var tvShow in InitialData.TVShows)
+            /*foreach (var tvShow in InitialData.TVShows)
             {
                 builder.InsertData(
                     "TVShows",
                     new string[] { "Id", "Title", "Description", "ReleaseDate", "EndDate", "NumberOfSeasons", "ModifiedWhen", "CreatedWhen" },
                     new object[] { tvShow.Id, tvShow.Title, tvShow.Description, tvShow.ReleaseDate, tvShow.EndDate, tvShow.NumberOfSeasons, DateTime.Now, DateTime.Now });
-            }
+            }*/
 
             foreach (var actor in InitialData.Actors)
             {
@@ -43,8 +43,8 @@ namespace DataLayer
             {
                 builder.InsertData(
                     "Ratings",
-                    new string[] { "Id", "Value", "UserId", "MovieId", "TVShowId", "ModifiedWhen", "CreatedWhen" },
-                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, rating.TVShowId, DateTime.Now, DateTime.Now });
+                    new string[] { "Id", "Value", "UserId", "MovieId", "ModifiedWhen", "CreatedWhen" },
+                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, DateTime.Now, DateTime.Now });
             }
 
             foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)

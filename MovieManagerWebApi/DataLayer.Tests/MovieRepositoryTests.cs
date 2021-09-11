@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DataLayer.Parameters;
 using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -82,7 +83,12 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovie = uow.Movies.SearchTopRated(null, 0, 1).PageItems.Single();
+            var pageParameters = new MoviesPagingParameters()
+            {
+                PageNumber = 0,
+                PageSize = 1
+            };
+            var topRatedMovie = uow.Movies.Page(pageParameters).PageItems.Single();
 
             Assert.AreEqual("The Shawshank Redemption", topRatedMovie.Title);
         }
@@ -92,7 +98,12 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovies = uow.Movies.SearchTopRated(null, 0, 2).PageItems.ToList();
+            var pageParameters = new MoviesPagingParameters()
+            {
+                PageNumber = 0,
+                PageSize = 2
+            };
+            var topRatedMovies = uow.Movies.Page(pageParameters).PageItems.ToList();
 
             Assert.AreEqual(2, topRatedMovies.Count);
             Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
@@ -104,7 +115,8 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var topRatedMovies = uow.Movies.SearchTopRated().PageItems.ToList();
+            var pageParameters = new MoviesPagingParameters();
+            var topRatedMovies = uow.Movies.Page(pageParameters).PageItems.ToList();
 
             // will still return two because one movie is unrated
             Assert.AreEqual(2, topRatedMovies.Count);
@@ -117,7 +129,11 @@ namespace DataLayer.Tests
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
 
-            var movie4Star = uow.Movies.SearchTopRated("4 stars").PageItems.Single();
+            var pageParameters = new MoviesPagingParameters
+            {
+                Token = "4 stars"
+            };
+            var movie4Star = uow.Movies.Page(pageParameters).PageItems.Single();
 
             // godfather will have 4 average rating
             Assert.AreEqual("The Godfather", movie4Star.Title);

@@ -31,7 +31,6 @@ namespace MovieManagerWebApi
 
             services.AddDbContext<MovieDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ITVShowsService, TVShowsService>();
             services.AddScoped<IMoviesService, MovieService>();
             services.AddScoped<IMappingService, MappingService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -63,7 +62,10 @@ namespace MovieManagerWebApi
         {
             app.UseSwagger();
 
-            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieManager API V1"));
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieManager API V1");
+            });
 
             if (env.IsDevelopment())
             {

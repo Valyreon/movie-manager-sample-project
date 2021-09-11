@@ -5,7 +5,9 @@ namespace ServiceLayer.Requests
     public class SignupRequest
     {
         [Required]
-        [RegularExpression("^[a-zA-Z0-9_]{8,25}$", ErrorMessage = "Username can consist only of alphanumeric characters and '_'.")]
+        [MaxLength(25)]
+        [MinLength(8)]
+        [RegularExpression("^[a-zA-Z0-9_]+$", ErrorMessage = "Username can consist only of alphanumeric characters and '_'.")]
         public string Username { get; set; }
         [Required]
         [EmailAddress]

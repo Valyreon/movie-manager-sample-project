@@ -6,7 +6,7 @@ namespace ServiceLayer.Interfaces
     public interface IMoviesService
     {
         MovieDetailsResponse GetMovieDetails(int id);
-        MoviesPageResponse SearchTopRatedMovies(SearchMediaRequest request);
+        MoviesPageResponse SearchTopRatedMovies(MoviePageRequest request);
         void Rate(RateRequest request, string userEmail);
     }
 }

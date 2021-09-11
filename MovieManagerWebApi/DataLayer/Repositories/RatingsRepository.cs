@@ -10,14 +10,9 @@ namespace DataLayer.Repositories
         {
         }
 
-        public Rating GetUserRatingForMovie(int movieId, int userId)
+        public Rating GetRatingForMovie(int movieId, int userId)
         {
             return context.Ratings.Where(r => r.UserId == userId && r.MovieId == movieId).SingleOrDefault();
-        }
-
-        public Rating GetUserRatingForTVShow(int seriesId, int userId)
-        {
-            return context.Ratings.Where(r => r.UserId == userId && r.TVShowId == seriesId).SingleOrDefault();
         }
     }
 }

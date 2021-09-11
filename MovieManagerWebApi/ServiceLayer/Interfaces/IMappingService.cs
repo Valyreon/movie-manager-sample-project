@@ -1,4 +1,6 @@
+using DataLayer.Parameters;
 using Domain;
+using ServiceLayer.Requests;
 using ServiceLayer.Responses;
 using ServiceLayer.Responses.JsonModels;
 
@@ -7,8 +9,7 @@ namespace ServiceLayer.Interfaces
     public interface IMappingService
     {
         MovieListItem MapMovieToListItem(Movie movie);
-        TVShowListItem MapTVShowToListItem(TVShow series);
         MovieDetailsResponse MapMovieToDetailsResponse(Movie movie);
-        TVShowDetailsResponse MapTVShowToDetailsResponse(TVShow series);
+        MoviesPagingParameters MapPageRequestToParameters(MoviePageRequest request);
     }
 }

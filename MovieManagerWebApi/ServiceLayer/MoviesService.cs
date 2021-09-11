@@ -20,7 +20,7 @@ namespace ServiceLayer
 
         public MovieDetailsResponse GetMovieDetails(int id)
         {
-            var movie = uow.Movies.GetMediaWithLoadedData(id);
+            var movie = uow.Movies.GetMovieWithLoadedData(id);
 
             if (movie == null)
             {
@@ -46,7 +46,7 @@ namespace ServiceLayer
                 throw new Exception("Invalid mvoie id."); //Custom exception
             }
 
-            var rating = uow.Ratings.GetUserRatingForMovie(request.MediaId, user.Id);
+            var rating = uow.Ratings.GetRatingForMovie(request.MediaId, user.Id);
 
             if (rating != null)
             {
@@ -60,9 +60,10 @@ namespace ServiceLayer
             uow.Commit();
         }
 
-        public MoviesPageResponse SearchTopRatedMovies(SearchMediaRequest request)
+        public MoviesPageResponse SearchTopRatedMovies(MoviePageRequest request)
         {
-            var (PageItems, TotalNumberOfPages) = uow.Movies.SearchTopRated(request.Token, request.PageNumber, request.PageSize);
+            var pageParameters = mappingService.MapPageRequestToParameters(request);
+            var (PageItems, TotalNumberOfPages) = uow.Movies.Page(pageParameters);
 
             return new MoviesPageResponse
             {

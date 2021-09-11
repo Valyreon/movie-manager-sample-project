@@ -26,7 +26,7 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<MoviesPageResponse> SearchTopRatedMovies([FromQuery] SearchMediaRequest request)
+        public ActionResult<MoviesPageResponse> SearchTopRatedMovies([FromQuery] MoviePageRequest request)
         {
             return movieService.SearchTopRatedMovies(request);
         }

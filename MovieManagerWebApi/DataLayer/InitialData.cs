@@ -24,7 +24,7 @@ namespace DataLayer
             }
 
             GenerateRatings((r, id) => r.MovieId = id, movies.Count, 12);
-            GenerateRatings((r, id) => r.TVShowId = id, tvShows.Count, 8);
+            //GenerateRatings((r, id) => r.TVShowId = id, tvShows.Count, 8);
 
             for (var i = 0; i < actorNames.Count; i++)
             {
@@ -197,7 +197,7 @@ namespace DataLayer
 
         private static readonly List<Rating> ratings = new List<Rating>();
 
-        private static readonly List<TVShow> tvShows = new List<TVShow>()
+        /*private static readonly List<TVShow> tvShows = new List<TVShow>()
         {
             new TVShow()
             {
@@ -313,7 +313,7 @@ namespace DataLayer
                 EndDate = new DateTime(2017,1,1),
                 NumberOfSeasons = 3
             }
-        };
+        };*/
 
         public static IReadOnlyDictionary<int, IEnumerable<int>> MovieActorsConnections = new Dictionary<int, IEnumerable<int>>
         {
@@ -418,7 +418,6 @@ namespace DataLayer
         private static readonly List<Actor> actors = new List<Actor>();
 
         public static IReadOnlyList<Movie> Movies => movies;
-        public static IReadOnlyList<TVShow> TVShows => tvShows;
         public static IReadOnlyList<Actor> Actors => actors;
         public static IReadOnlyList<Rating> Ratings => ratings;
         public static IReadOnlyList<User> Users => users;

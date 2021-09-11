@@ -9,7 +9,6 @@ namespace Domain
         [StringLength(50)]
         public string Name { get; set; }
 
-        public ICollection<TVShow> StarredInTvShows { get; set; }
         public ICollection<Movie> StarredInMovies { get; set; }
     }
 }

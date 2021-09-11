@@ -10,10 +10,13 @@ namespace Domain
     public class User : BaseEntity
     {
         [Required]
+        [MinLength(6)]
+        [MaxLength(25)]
         public string Username { get; set; }
 
         [Required]
         [EmailAddress]
+        [MaxLength(100)]
         public string Email { get; set; }
 
         [Required]
@@ -36,21 +39,22 @@ namespace Domain
 
         public bool IsPasswordValid(string password)
         {
-            using var hasher = SHA256.Create();
             var passBytes = Encoding.UTF8.GetBytes(password);
-            var currentHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
 
-            return currentHash.SequenceEqual(PassHash);
+            using var pbkdf2Hasher = new Rfc2898DeriveBytes(passBytes, Salt, 80_000, HashAlgorithmName.SHA256);
+            var passHash = pbkdf2Hasher.GetBytes(256 / 8);
+
+            return passHash.SequenceEqual(PassHash);
         }
 
         public void SetPassword(string password)
         {
-            using var hasher = SHA256.Create();
             var passBytes = Encoding.UTF8.GetBytes(password);
             Salt = new byte[32];
             new Random().NextBytes(Salt);
 
-            PassHash = hasher.ComputeHash(Salt.Concat(passBytes).ToArray());
+            using var pbkdf2Hasher = new Rfc2898DeriveBytes(passBytes, Salt, 80_000, HashAlgorithmName.SHA256);
+            PassHash = pbkdf2Hasher.GetBytes(256 / 8);
         }
     }
 }
