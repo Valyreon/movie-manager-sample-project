@@ -13,6 +13,6 @@ namespace ServiceLayer.Responses
 
         public IEnumerable<string> Actors { get; set; }
 
-        public double? AverageRating { get; set; }
+        public double? AverageReview { get; set; }
     }
 }

@@ -11,6 +11,6 @@ namespace ServiceLayer.Interfaces
         MovieListItem MapMovieToListItem(Movie movie);
         MovieDetailsResponse MapMovieToDetailsResponse(Movie movie);
         MoviesPagingParameters MapPageRequestToParameters(MoviesPageRequest request);
-        RatingData MapRatingToRatingData(Rating rating);
+        ReviewData MapReviewToReviewData(Review review);
     }
 }

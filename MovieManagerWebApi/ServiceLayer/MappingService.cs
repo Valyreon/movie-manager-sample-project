@@ -14,7 +14,7 @@ namespace ServiceLayer
     {
         public MovieListItem MapMovieToListItem(Movie movie)
         {
-            var averageRating = movie.CalculateAverageRating();
+            var averageReview = movie.CalculateAverageReview();
 
             var res = new MovieListItem
             {
@@ -22,34 +22,35 @@ namespace ServiceLayer
                 Title = movie.Title,
                 ReleaseYear = movie.ReleaseDate.Year,
                 CoverPath = movie.CoverPath,
-                AverageRating = averageRating.HasValue 
-                                        ? Math.Round(averageRating.Value, 1) 
+                AverageReview = averageReview.HasValue 
+                                        ? Math.Round(averageReview.Value, 1) 
                                         : (double?)null
             };
 
             return res;
         }
 
-        public RatingData MapRatingToRatingData(Rating rating)
+        public ReviewData MapReviewToReviewData(Review review)
         {
-            return new RatingData
+            return new ReviewData
             {
-                RatedBy = rating.User.Username,
-                Value = rating.Value,
-                RatedWhen = rating.ModifiedWhen.ToString()
+                RatedBy = review.User.Username,
+                Rating = review.Rating,
+                Text = review.Text,
+                RatedWhen = review.ModifiedWhen.ToString()
             };
         }
 
         public MovieDetailsResponse MapMovieToDetailsResponse(Movie movie)
         {
-            var averageRating = movie.CalculateAverageRating();
+            var averageReview = movie.CalculateAverageReview();
 
             var res = new MovieDetailsResponse
             {
                 Id = movie.Id,
                 Actors = movie.Actors.Select(a => a.Name),
                 Description = movie.Description,
-                AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null,
+                AverageReview = averageReview.HasValue ? Math.Round(averageReview.Value, 1) : (double?)null,
                 ReleaseYear = movie.ReleaseDate.Year,
                 CoverPath = movie.CoverPath,
                 Title = movie.Title
@@ -75,7 +76,7 @@ namespace ServiceLayer
             return str.ToLower() switch
             {
                 "title" => MoviesOrderBy.Title,
-                "rating" => MoviesOrderBy.Rating,
+                "review" => MoviesOrderBy.Review,
                 "release" => MoviesOrderBy.Release,
                 _ => throw new NotSupportedException($"'{str}' is not an available MoviesOrderBy enum."),
             };

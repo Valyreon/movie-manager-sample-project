@@ -6,7 +6,7 @@ namespace DataLayer.Interfaces
     {
         IMoviesRepository Movies { get; }
         IUsersRepository Users { get; }
-        IRatingsRepository Ratings { get; }
+        IReviewsRepository Reviews { get; }
         int Commit();
     }
 }

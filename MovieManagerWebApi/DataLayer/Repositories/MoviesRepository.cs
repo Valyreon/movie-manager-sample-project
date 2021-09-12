@@ -13,7 +13,7 @@ namespace DataLayer.Repositories
     internal class RatedMovie
     {
         public Movie Movie { get; internal set; }
-        public double? AverageRating { get; internal set; }
+        public double? AverageReview { get; internal set; }
     }
 
     public class MoviesRepository : GenericRepository<Movie>, IMoviesRepository
@@ -34,7 +34,7 @@ namespace DataLayer.Repositories
 
         public Movie GetMovieWithLoadedData(int id)
         {
-            return context.Movies.Include(m => m.Ratings)
+            return context.Movies.Include(m => m.Reviews)
                                     .ThenInclude(r => r.User)
                                  .Include(m => m.Actors)
                                  .SingleOrDefault(m => m.Id == id);
@@ -42,8 +42,8 @@ namespace DataLayer.Repositories
 
         public (IEnumerable<Movie> PageItems, int TotalNumberOfPages) Page(MoviesPagingParameters parameters)
         {
-            var query = context.Movies.Include(m => m.Ratings)
-                    .Select(m => new RatedMovie { Movie = m, AverageRating = m.Ratings.Average(r => r.Value) });
+            var query = context.Movies.Include(m => m.Reviews)
+                    .Select(m => new RatedMovie { Movie = m, AverageReview = m.Reviews.Average(r => r.Rating) });
 
             var trimmedToken = parameters.Token == null ? "" : parameters.Token.Trim();
             var matchingRegexFound = false;
@@ -80,13 +80,13 @@ namespace DataLayer.Repositories
                     Func<RatedMovie, string> titleSelector = r => r.Movie.Title;
                     return (ascending ? query.OrderBy(titleSelector)
                                       : query.OrderByDescending(titleSelector));
-                case MoviesOrderBy.Rating:
-                    Func<RatedMovie, bool> ratingSelectorHasValue = r => r.AverageRating.HasValue;
-                    Func<RatedMovie, double?> ratingSelector = r => r.AverageRating;
-                    return ascending ? query.OrderBy(ratingSelectorHasValue)
-                                            .ThenBy(ratingSelector)
-                                     : query.OrderByDescending(ratingSelectorHasValue)
-                                            .ThenByDescending(ratingSelector);
+                case MoviesOrderBy.Review:
+                    Func<RatedMovie, bool> reviewSelectorHasValue = r => r.AverageReview.HasValue;
+                    Func<RatedMovie, double?> reviewSelector = r => r.AverageReview;
+                    return ascending ? query.OrderBy(reviewSelectorHasValue)
+                                            .ThenBy(reviewSelector)
+                                     : query.OrderByDescending(reviewSelectorHasValue)
+                                            .ThenByDescending(reviewSelector);
                 case MoviesOrderBy.Release:
                     Func<RatedMovie, DateTimeOffset> releaseSelector = r => r.Movie.ReleaseDate;
                     return (ascending ? query.OrderBy(releaseSelector)
@@ -99,13 +99,13 @@ namespace DataLayer.Repositories
         private static IQueryable<RatedMovie> ApplySpecificStarQuery(IQueryable<RatedMovie> query, string numberOfStars)
         {
             var stars = int.Parse(numberOfStars);
-            return query.Where(a => a.AverageRating > stars - 0.5 && a.AverageRating <= stars + 0.5);
+            return query.Where(a => a.AverageReview > stars - 0.5 && a.AverageReview <= stars + 0.5);
         }
 
         private static IQueryable<RatedMovie> ApplyAtLeastStarsQuery(IQueryable<RatedMovie> query, string numberOfStars)
         {
             var stars = int.Parse(numberOfStars);
-            return query.Where(a => a.AverageRating >= stars);
+            return query.Where(a => a.AverageReview >= stars);
         }
 
         private static IQueryable<RatedMovie> ApplyAfterYearQuery(IQueryable<RatedMovie> query, string yearString)

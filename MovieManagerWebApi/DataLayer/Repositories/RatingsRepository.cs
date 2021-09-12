@@ -5,20 +5,20 @@ using Domain;
 
 namespace DataLayer.Repositories
 {
-    public class RatingsRepository : GenericRepository<Rating>, IRatingsRepository
+    public class ReviewsRepository : GenericRepository<Review>, IReviewsRepository
     {
-        public RatingsRepository(MovieDbContext context) : base(context)
+        public ReviewsRepository(MovieDbContext context) : base(context)
         {
         }
 
-        public IEnumerable<Rating> GetAllRatingsForMovie(int movieId)
+        public IEnumerable<Review> GetAllReviewsForMovie(int movieId)
         {
-            return context.Ratings.Where(r => r.MovieId == movieId);
+            return context.Reviews.Where(r => r.MovieId == movieId);
         }
 
-        public Rating GetUserRatingForMovie(int movieId, int userId)
+        public Review GetUserReviewForMovie(int movieId, int userId)
         {
-            return context.Ratings.Where(r => r.UserId == userId && r.MovieId == movieId).SingleOrDefault();
+            return context.Reviews.Where(r => r.UserId == userId && r.MovieId == movieId).SingleOrDefault();
         }
     }
 }

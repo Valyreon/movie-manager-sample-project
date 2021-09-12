@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DataLayer.Interfaces
 {
-    public interface IRatingsRepository : IGenericRepository<Rating>
+    public interface IReviewsRepository : IGenericRepository<Review>
     {
-        public Rating GetUserRatingForMovie(int movieId, int userId);
-        public IEnumerable<Rating> GetAllRatingsForMovie(int movieId);
+        public Review GetUserReviewForMovie(int movieId, int userId);
+        public IEnumerable<Review> GetAllReviewsForMovie(int movieId);
     }
 }

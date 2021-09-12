@@ -47,27 +47,27 @@ namespace DataLayer.Tests
             uow.Movies.Add(theDarkKnight);
             uow.Movies.Add(godfather);
 
-            var reviewOne = new Rating()
+            var reviewOne = new Review()
             {
-                Value = 5,
+                Rating = 5,
                 MovieId = godfather.Id
             };
 
-            var reviewTwo = new Rating()
+            var reviewTwo = new Review()
             {
-                Value = 3,
+                Rating = 3,
                 MovieId = godfather.Id
             };
 
-            var reviewThree = new Rating()
+            var reviewThree = new Review()
             {
-                Value = 5,
+                Rating = 5,
                 MovieId = shawshankRedemption.Id
             };
 
-            uow.Ratings.Add(reviewOne);
-            uow.Ratings.Add(reviewTwo);
-            uow.Ratings.Add(reviewThree);
+            uow.Reviews.Add(reviewOne);
+            uow.Reviews.Add(reviewTwo);
+            uow.Reviews.Add(reviewThree);
 
             _ = uow.Commit();
         }
@@ -135,7 +135,7 @@ namespace DataLayer.Tests
             };
             var movie4Star = uow.Movies.Page(pageParameters).PageItems.Single();
 
-            // godfather will have 4 average rating
+            // godfather will have 4 average review
             Assert.AreEqual("The Godfather", movie4Star.Title);
         }
     }

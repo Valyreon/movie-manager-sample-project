@@ -1,8 +1,9 @@
 namespace ServiceLayer.Responses.JsonModels
 {
-    public class RatingData
+    public class ReviewData
     {
-        public byte Value { get; set; }
+        public byte Rating { get; set; }
+        public string Text { get; set; }
         public string RatedBy { get; set; }
         public string RatedWhen { get; set; }
     }

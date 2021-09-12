@@ -6,7 +6,7 @@ namespace DataLayer
 {
     public static class InitialData
     {
-        private static int ratingCounter = 1;
+        private static int reviewCounter = 1;
 
         static InitialData()
         {
@@ -23,8 +23,8 @@ namespace DataLayer
                 user.SetPassword("Default123");
             }
 
-            GenerateRatings((r, id) => r.MovieId = id, movies.Count, 12);
-            //GenerateRatings((r, id) => r.TVShowId = id, tvShows.Count, 8);
+            GenerateReviews((r, id) => r.MovieId = id, movies.Count, 12);
+            //GenerateReviews((r, id) => r.TVShowId = id, tvShows.Count, 8);
 
             for (var i = 0; i < actorNames.Count; i++)
             {
@@ -32,18 +32,18 @@ namespace DataLayer
             }
         }
 
-        private static void GenerateRatings(Action<Rating, int> setId, int numberOfMediaItems, int enoughMediaRatedNum)
+        private static void GenerateReviews(Action<Review, int> setId, int numberOfMediaItems, int enoughMediaRatedNum)
         {
             var rand = new Random();
-            // generate random ratings
-            // each user will have between 3 and 5 rating for random media (first 12 rated media will be different)
+            // generate random reviews
+            // each user will have between 3 and 5 review for random media (first 12 rated media will be different)
             var enoughMediaRated = false;
             var ratedIds = new HashSet<int>();
             foreach (var user in users)
             {
                 var userRatedIds = new HashSet<int>();
-                var numberOfRatings = rand.Next(3) + 2;
-                for (var i = 0; i < numberOfRatings; ++i)
+                var numberOfReviews = rand.Next(3) + 2;
+                for (var i = 0; i < numberOfReviews; ++i)
                 {
                     var mediaToRateId = rand.Next(numberOfMediaItems - 1) + 1;
 
@@ -73,9 +73,9 @@ namespace DataLayer
                     }
 
                     var value = i == 0 ? (byte)5 : Convert.ToByte(rand.Next(3) + 2);
-                    var rating = new Rating { Id = ratingCounter++, UserId = user.Id, Value = value };
-                    setId(rating, mediaToRateId);
-                    ratings.Add(rating);
+                    var review = new Review { Id = reviewCounter++, UserId = user.Id, Rating = value };
+                    setId(review, mediaToRateId);
+                    reviews.Add(review);
                     userRatedIds.Add(mediaToRateId);
                 }
             }
@@ -195,7 +195,7 @@ namespace DataLayer
             new User { Id = 1, Username = "default", Email = "default@default.com" },
         };
 
-        private static readonly List<Rating> ratings = new List<Rating>();
+        private static readonly List<Review> reviews = new List<Review>();
 
         /*private static readonly List<TVShow> tvShows = new List<TVShow>()
         {
@@ -419,7 +419,7 @@ namespace DataLayer
 
         public static IReadOnlyList<Movie> Movies => movies;
         public static IReadOnlyList<Actor> Actors => actors;
-        public static IReadOnlyList<Rating> Ratings => ratings;
+        public static IReadOnlyList<Review> Reviews => reviews;
         public static IReadOnlyList<User> Users => users;
     }
 }

@@ -31,7 +31,7 @@ namespace MovieManagerWebApi
 
             services.AddDbContext<MovieDbContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<IRatingsService, RatingsService>();
+            services.AddScoped<IReviewsService, ReviewsService>();
             services.AddScoped<IMoviesService, MovieService>();
             services.AddScoped<IMappingService, MappingService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();

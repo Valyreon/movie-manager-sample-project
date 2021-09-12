@@ -11,8 +11,8 @@ namespace ServiceLayer.Requests
         public int PageNumber { get; set; } = 0;
         [Range(1, 100)]
         public int PageSize { get; set; } = 10;
-        [AllowedStringValues("title", "rating", "release")]
-        public string OrderBy { get; set; } = "rating";
+        [AllowedStringValues("title", "review", "release")]
+        public string OrderBy { get; set; } = "review";
         public bool Ascending { get; set; } = false;
     }
 }

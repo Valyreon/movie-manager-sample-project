@@ -19,7 +19,7 @@ namespace DataLayer
         }
 
         public DbSet<Movie> Movies { get; set; }
-        public DbSet<Rating> Ratings { get; set; }
+        public DbSet<Review> Reviews { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Actor> Actors { get; set; }
 
@@ -58,7 +58,7 @@ namespace DataLayer
                    .HasIndex(u => u.Username)
                    .IsUnique();
 
-            modelBuilder.Entity<Rating>().HasIndex("UserId", "MovieId").IsUnique();
+            modelBuilder.Entity<Review>().HasIndex("UserId", "MovieId").IsUnique();
 
             // movie actors many to many
             modelBuilder.Entity<Movie>()
@@ -67,10 +67,10 @@ namespace DataLayer
                         .UsingEntity(j => j.ToTable("ActorMovie"));
 
             // movie has many reviews
-            modelBuilder.Entity<Movie>().HasMany(m => m.Ratings);
+            modelBuilder.Entity<Movie>().HasMany(m => m.Reviews);
 
             // user has many reviews
-            modelBuilder.Entity<User>().HasMany(m => m.Ratings);
+            modelBuilder.Entity<User>().HasMany(m => m.Reviews);
         }
 
         public override int SaveChanges()

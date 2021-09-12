@@ -7,7 +7,7 @@ namespace DataLayer.Enums
     public enum MoviesOrderBy
     {
         Title,
-        Rating,
+        Review,
         Release
     }
 }

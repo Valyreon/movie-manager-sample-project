@@ -15,16 +15,16 @@ namespace Domain
         public DateTimeOffset ReleaseDate { get; set; }
 
         public ICollection<Actor> Actors { get; set; }
-        public ICollection<Rating> Ratings { get; set; }
+        public ICollection<Review> Reviews { get; set; }
 
-        public double? CalculateAverageRating()
+        public double? CalculateAverageReview()
         {
-            if (Ratings?.Any() != true)
+            if (Reviews?.Any() != true)
             {
                 return null;
             }
 
-            return Ratings.Select(r => Convert.ToDouble(r.Value)).Average();
+            return Reviews.Select(r => Convert.ToDouble(r.Rating)).Average();
         }
     }
 }

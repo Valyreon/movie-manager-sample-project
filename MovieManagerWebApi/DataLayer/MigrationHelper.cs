@@ -39,12 +39,12 @@ namespace DataLayer
                     new object[] { user.Id, user.Username, user.Email, user.Salt, user.PassHash, user.IsPrivate, DateTime.Now, DateTime.Now });
             }
 
-            foreach (var rating in InitialData.Ratings)
+            foreach (var review in InitialData.Reviews)
             {
                 builder.InsertData(
-                    "Ratings",
+                    "Reviews",
                     new string[] { "Id", "Value", "UserId", "MovieId", "ModifiedWhen", "CreatedWhen" },
-                    new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, DateTime.Now, DateTime.Now });
+                    new object[] { review.Id, review.Rating, review.UserId, review.MovieId, DateTime.Now, DateTime.Now });
             }
 
             /*foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)
@@ -70,9 +70,9 @@ namespace DataLayer
             }
         }
 
-        public static void EnsureOneColumnIsNullInRatingTable(MigrationBuilder builder)
+        public static void EnsureOneColumnIsNullInReviewTable(MigrationBuilder builder)
         {
-            builder.Sql(@"ALTER TABLE Ratings
+            builder.Sql(@"ALTER TABLE Reviews
                           ADD CONSTRAINT OneColumnNull CHECK
                           ((MovieId IS NULL AND SeriesId IS NOT NULL) OR
                           (MovieId IS NOT NULL AND SeriesId IS NULL))");

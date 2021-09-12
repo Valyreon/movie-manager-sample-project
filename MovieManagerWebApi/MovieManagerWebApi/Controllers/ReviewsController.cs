@@ -11,30 +11,29 @@ namespace MovieManagerWebApi.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class RatingsController : ControllerBase
+    public class ReviewsController : ControllerBase
     {
-        private readonly IRatingsService ratingsService;
+        private readonly IReviewsService reviewsService;
 
-        public RatingsController(IRatingsService ratingsService)
+        public ReviewsController(IReviewsService reviewsService)
         {
-            this.ratingsService = ratingsService;
+            this.reviewsService = reviewsService;
         }
 
-        [Route("rate-movie")]
         [HttpPut]
-        public ActionResult Rate([FromBody] RateRequest request)
+        public ActionResult Rate([FromBody] ReviewRequest request)
         {
             var currentUserEmail = ControllerContext.HttpContext.User.GetUserEmail();
-            ratingsService.Rate(request, currentUserEmail);
+            reviewsService.Rate(request, currentUserEmail);
             return Ok();
         }
 
         [Route("{movieId}")]
         [HttpGet]
-        public ActionResult<IEnumerable<RatingData>> GetMovieRatings(int movieId)
+        public ActionResult<IEnumerable<ReviewData>> GetMovieReviews(int movieId)
         {
             var currentUserEmail = ControllerContext.HttpContext.User.GetUserEmail();
-            return Ok(ratingsService.GetAllRatingsForMovie(movieId));
+            return Ok(reviewsService.GetAllReviewsForMovie(movieId));
         }
     }
 }

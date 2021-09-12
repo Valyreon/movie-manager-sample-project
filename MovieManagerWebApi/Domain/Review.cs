@@ -3,10 +3,13 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
-    public class Rating : BaseEntity
+    public class Review : BaseEntity
     {
-        [Range(1, 5)]
-        public byte Value { get; set; }
+        [Range(1, 10)]
+        public byte Rating { get; set; }
+
+        [StringLength(200)]
+        public string Text { get; set; }
 
         [Required]
         [ForeignKey("User")]

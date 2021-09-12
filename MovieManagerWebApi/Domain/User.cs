@@ -35,7 +35,7 @@ namespace Domain
         [Required]
         public bool IsPrivate { get; set; }
 
-        public ICollection<Rating> Ratings { get; set; }
+        public ICollection<Review> Reviews { get; set; }
 
         public bool IsPasswordValid(string password)
         {

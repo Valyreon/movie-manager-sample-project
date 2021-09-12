@@ -9,18 +9,18 @@ using System.Text;
 
 namespace ServiceLayer
 {
-    public class RatingsService : IRatingsService
+    public class ReviewsService : IReviewsService
     {
         private readonly IUnitOfWork uow;
         private readonly IMappingService mappingService;
 
-        public RatingsService(IUnitOfWork uow, IMappingService mappingService)
+        public ReviewsService(IUnitOfWork uow, IMappingService mappingService)
         {
             this.uow = uow;
             this.mappingService = mappingService;
         }
 
-        public void Rate(RateRequest request, string userEmail)
+        public void Rate(ReviewRequest request, string userEmail)
         {
             // get the user with specified email (logged in user)
             var user = uow.Users.GetUserByEmail(userEmail);
@@ -40,26 +40,26 @@ namespace ServiceLayer
                 throw new Exception("Invalid mvoie id."); //TODO: custom exception
             }
 
-            // get rating by this user for speicfied movie
-            var rating = uow.Ratings.GetUserRatingForMovie(request.MovieId, user.Id);
+            // get review by this user for speicfied movie
+            var review = uow.Reviews.GetUserReviewForMovie(request.MovieId, user.Id);
 
-            // if user has already rated this movie update the rating to new value
-            if (rating != null)
+            // if user has already rated this movie update the review to new value
+            if (review != null)
             {
-                rating.Value = request.Value;
+                review.Rating = request.Rating;
                 uow.Commit();
                 return;
             }
 
-            // otherwise create new rating
-            rating = new Domain.Rating { UserId = user.Id, MovieId = request.MovieId, Value = request.Value };
-            uow.Ratings.Add(rating);
+            // otherwise create new review
+            review = new Domain.Review { UserId = user.Id, MovieId = request.MovieId, Rating = request.Rating };
+            uow.Reviews.Add(review);
             uow.Commit();
         }
 
-        public IEnumerable<RatingData> GetAllRatingsForMovie(int movieId)
+        public IEnumerable<ReviewData> GetAllReviewsForMovie(int movieId)
         {
-            return uow.Ratings.GetAllRatingsForMovie(movieId).Select(mappingService.MapRatingToRatingData);
+            return uow.Reviews.GetAllReviewsForMovie(movieId).Select(mappingService.MapReviewToReviewData);
         }
     }
 }
