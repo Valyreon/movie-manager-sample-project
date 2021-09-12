@@ -52,7 +52,7 @@ namespace DataLayer.Repositories
                 var match = regex.Match(trimmedToken);
                 if (matchingRegexFound = match.Success)
                 {
-                    query = regexQueryDict[regex](query, trimmedToken);
+                    query = regexQueryDict[regex](query, match.Groups[1].Value);
                     break;
                 }
             }
@@ -130,6 +130,11 @@ namespace DataLayer.Repositories
             var partialPages = (totalNumber % pageSize == 0) ? 0 : 1;
 
             return fullPages + partialPages;
+        }
+
+        public IEnumerable<Movie> GetAllMoviesWithLoadedData()
+        {
+            return context.Movies.Include(m => m.Reviews);
         }
     }
 }

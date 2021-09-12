@@ -35,8 +35,8 @@ namespace DataLayer
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json")
                 .Build();
-            var connectionString = configuration.GetConnectionString("MoviesDatabase");
-            optionsBuilder.UseSqlServer(connectionString);
+            var connectionString = configuration.GetConnectionString("MoviesDatabasePostgre");
+            optionsBuilder.UseNpgsql(connectionString);
         }
 
         public static void LogToLocalFile(string text)

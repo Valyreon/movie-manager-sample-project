@@ -17,7 +17,7 @@ namespace Domain
         public ICollection<Actor> Actors { get; set; }
         public ICollection<Review> Reviews { get; set; }
 
-        public double? CalculateAverageReview()
+        public double? CalculateAverageRating()
         {
             if (Reviews?.Any() != true)
             {

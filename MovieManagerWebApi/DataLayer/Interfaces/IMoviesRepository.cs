@@ -8,6 +8,7 @@ namespace DataLayer.Interfaces
     public interface IMoviesRepository : IGenericRepository<Movie>
     {
          Movie GetMovieWithLoadedData(int id);
+         IEnumerable<Movie> GetAllMoviesWithLoadedData();
          (IEnumerable<Movie> PageItems, int TotalNumberOfPages) Page(MoviesPagingParameters parameters);
     }
 }

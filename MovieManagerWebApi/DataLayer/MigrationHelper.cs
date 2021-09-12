@@ -43,7 +43,7 @@ namespace DataLayer
             {
                 builder.InsertData(
                     "Reviews",
-                    new string[] { "Id", "Value", "UserId", "MovieId", "ModifiedWhen", "CreatedWhen" },
+                    new string[] { "Id", "Rating", "UserId", "MovieId", "ModifiedWhen", "CreatedWhen" },
                     new object[] { review.Id, review.Rating, review.UserId, review.MovieId, DateTime.Now, DateTime.Now });
             }
 
@@ -68,14 +68,6 @@ namespace DataLayer
                     new object[] { actorId, movieId });
                 }
             }
-        }
-
-        public static void EnsureOneColumnIsNullInReviewTable(MigrationBuilder builder)
-        {
-            builder.Sql(@"ALTER TABLE Reviews
-                          ADD CONSTRAINT OneColumnNull CHECK
-                          ((MovieId IS NULL AND SeriesId IS NOT NULL) OR
-                          (MovieId IS NOT NULL AND SeriesId IS NULL))");
         }
     }
 }

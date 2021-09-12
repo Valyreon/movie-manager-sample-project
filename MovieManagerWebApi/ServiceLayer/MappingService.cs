@@ -14,7 +14,7 @@ namespace ServiceLayer
     {
         public MovieListItem MapMovieToListItem(Movie movie)
         {
-            var averageReview = movie.CalculateAverageReview();
+            var averageReview = movie.CalculateAverageRating();
 
             var res = new MovieListItem
             {
@@ -43,7 +43,7 @@ namespace ServiceLayer
 
         public MovieDetailsResponse MapMovieToDetailsResponse(Movie movie)
         {
-            var averageReview = movie.CalculateAverageReview();
+            var averageReview = movie.CalculateAverageRating();
 
             var res = new MovieDetailsResponse
             {

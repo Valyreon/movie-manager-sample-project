@@ -48,7 +48,7 @@ namespace ServiceLayer
 
         public IEnumerable<MovieListItem> GetAllMovies()
         {
-            return uow.Movies.GetAll().Select(mappingService.MapMovieToListItem);
+            return uow.Movies.GetAllMoviesWithLoadedData().Select(mappingService.MapMovieToListItem);
         }
     }
 }
