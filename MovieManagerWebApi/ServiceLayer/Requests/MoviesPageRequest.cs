@@ -1,12 +1,9 @@
-using DataLayer.Enums;
-using Newtonsoft.Json.Converters;
 using ServiceLayer.Attributes;
 using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
 
 namespace ServiceLayer.Requests
 {
-    public class MoviePageRequest
+    public class MoviesPageRequest
     {
         [RegularExpression("^[\\ a-zA-Z0-9]{2,}$")]
         public string Token { get; set; }

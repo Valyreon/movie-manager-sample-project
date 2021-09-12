@@ -1,9 +1,11 @@
 using Domain;
+using System.Collections.Generic;
 
 namespace DataLayer.Interfaces
 {
     public interface IRatingsRepository : IGenericRepository<Rating>
     {
-        public Rating GetRatingForMovie(int movieId, int userId);
+        public Rating GetUserRatingForMovie(int movieId, int userId);
+        public IEnumerable<Rating> GetAllRatingsForMovie(int movieId);
     }
 }

@@ -334,7 +334,7 @@ namespace DataLayer
             { 15, new int[] { 5, 21, 22 } },
         };
 
-        public static IReadOnlyDictionary<int, IEnumerable<int>> TVShowActorsConnections = new Dictionary<int, IEnumerable<int>>
+        /*public static IReadOnlyDictionary<int, IEnumerable<int>> TVShowActorsConnections = new Dictionary<int, IEnumerable<int>>
         {
             { 1, new int[] { 31, 32 } },
             { 2, new int[] { 33, 34 } },
@@ -348,7 +348,7 @@ namespace DataLayer
             { 10, new int[] { 54, 55 } },
             { 11, new int[] { 58, 59 } },
             { 12, new int[] { 52, 60 } },
-        };
+        };*/
 
         private static readonly IReadOnlyList<string> actorNames = new string[]
         {

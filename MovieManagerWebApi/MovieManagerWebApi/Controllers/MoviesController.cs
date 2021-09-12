@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -5,10 +6,11 @@ using MovieManagerWebApi.Extensions;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses;
+using ServiceLayer.Responses.JsonModels;
 
 namespace MovieManagerWebApi.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class MoviesController : ControllerBase
     {
@@ -20,24 +22,23 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpGet]
-        public ActionResult<MovieDetailsResponse> GetMovieDetails([FromQuery][Required] int id)
+        public ActionResult<IEnumerable<MovieListItem>> GetAllMovies()
+        {
+            return Ok(movieService.GetAllMovies());
+        }
+
+        [Route("{id}")]
+        [HttpGet]
+        public ActionResult<MovieDetailsResponse> GetMovieDetails([Required] int id)
         {
             return movieService.GetMovieDetails(id);
         }
 
+        [Route("page")]
         [HttpGet]
-        public ActionResult<MoviesPageResponse> SearchTopRatedMovies([FromQuery] MoviePageRequest request)
+        public ActionResult<MoviesPageResponse> GetMoviesPage([FromQuery] MoviesPageRequest request)
         {
-            return movieService.SearchTopRatedMovies(request);
-        }
-
-        [Authorize]
-        [HttpPost]
-        public ActionResult Rate([FromBody] RateRequest request)
-        {
-            var currentUserEmail = ControllerContext.HttpContext.User.GetUserEmail();
-            movieService.Rate(request, currentUserEmail);
-            return Ok();
+            return movieService.Page(request);
         }
     }
 }

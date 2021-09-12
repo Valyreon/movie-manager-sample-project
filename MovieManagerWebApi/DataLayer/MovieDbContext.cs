@@ -25,7 +25,7 @@ namespace DataLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //optionsBuilder.LogTo(LogStuff);
+            optionsBuilder.LogTo(LogToLocalFile);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -39,10 +39,13 @@ namespace DataLayer
             optionsBuilder.UseSqlServer(connectionString);
         }
 
-        public static void LogStuff(string value)
+        public static void LogToLocalFile(string text)
         {
-            const string logPath = @"C:\Users\Luka\Desktop\movieLog.txt";
-            File.AppendAllText(logPath, "\n=================================================\n}" + value);
+            string logPath = @"C:\Users\luka.budrak\Desktop\log.txt";
+            if (File.Exists(logPath))
+            {
+                File.AppendAllText(logPath, "\n=================================================\n}" + text);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,7 +59,6 @@ namespace DataLayer
                    .IsUnique();
 
             modelBuilder.Entity<Rating>().HasIndex("UserId", "MovieId").IsUnique();
-            modelBuilder.Entity<Rating>().HasIndex("UserId", "TVShowId").IsUnique();
 
             // movie actors many to many
             modelBuilder.Entity<Movie>()

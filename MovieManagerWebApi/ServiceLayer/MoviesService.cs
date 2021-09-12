@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using DataLayer.Interfaces;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses;
+using ServiceLayer.Responses.JsonModels;
 
 namespace ServiceLayer
 {
@@ -24,43 +26,13 @@ namespace ServiceLayer
 
             if (movie == null)
             {
-                throw new Exception("No item with that id."); // custom exception
+                throw new Exception("No item with that id."); // TODO: custom exception
             }
 
             return mappingService.MapMovieToDetailsResponse(movie);
         }
 
-        public void Rate(RateRequest request, string userEmail)
-        {
-            var user = uow.Users.GetUserByEmail(userEmail);
-
-            if (user == null)
-            {
-                throw new Exception("Invalid user."); // custom exception
-            }
-
-            var movie = uow.Movies.GetById(request.MovieId);
-
-            if (movie == null)
-            {
-                throw new Exception("Invalid mvoie id."); //Custom exception
-            }
-
-            var rating = uow.Ratings.GetRatingForMovie(request.MovieId, user.Id);
-
-            if (rating != null)
-            {
-                rating.Value = request.Value;
-                uow.Commit();
-                return;
-            }
-
-            rating = new Domain.Rating { UserId = user.Id, MovieId = request.MovieId, Value = request.Value };
-            uow.Ratings.Add(rating);
-            uow.Commit();
-        }
-
-        public MoviesPageResponse SearchTopRatedMovies(MoviePageRequest request)
+        public MoviesPageResponse Page(MoviesPageRequest request)
         {
             var pageParameters = mappingService.MapPageRequestToParameters(request);
             var (PageItems, TotalNumberOfPages) = uow.Movies.Page(pageParameters);
@@ -72,6 +44,11 @@ namespace ServiceLayer
                 PageSize = 10,
                 TotalPages = TotalNumberOfPages
             };
+        }
+
+        public IEnumerable<MovieListItem> GetAllMovies()
+        {
+            return uow.Movies.GetAll().Select(mappingService.MapMovieToListItem);
         }
     }
 }

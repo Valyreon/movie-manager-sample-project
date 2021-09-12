@@ -14,7 +14,6 @@ namespace ServiceLayer
     {
         public MovieListItem MapMovieToListItem(Movie movie)
         {
-
             var averageRating = movie.CalculateAverageRating();
 
             var res = new MovieListItem
@@ -37,20 +36,18 @@ namespace ServiceLayer
             {
                 RatedBy = rating.User.Username,
                 Value = rating.Value,
-                RatedWhen = rating.ModifiedWhen.ToShortDateString()
+                RatedWhen = rating.ModifiedWhen.ToString()
             };
         }
 
         public MovieDetailsResponse MapMovieToDetailsResponse(Movie movie)
         {
-
             var averageRating = movie.CalculateAverageRating();
 
             var res = new MovieDetailsResponse
             {
                 Id = movie.Id,
                 Actors = movie.Actors.Select(a => a.Name),
-                Ratings = movie.Ratings.Select(MapRatingToRatingData),
                 Description = movie.Description,
                 AverageRating = averageRating.HasValue ? Math.Round(averageRating.Value, 1) : (double?)null,
                 ReleaseYear = movie.ReleaseDate.Year,
@@ -61,7 +58,7 @@ namespace ServiceLayer
             return res;
         }
 
-        public MoviesPagingParameters MapPageRequestToParameters(MoviePageRequest request)
+        public MoviesPagingParameters MapPageRequestToParameters(MoviesPageRequest request)
         {
             return new MoviesPagingParameters
             {
@@ -81,16 +78,6 @@ namespace ServiceLayer
                 "rating" => MoviesOrderBy.Rating,
                 "release" => MoviesOrderBy.Release,
                 _ => throw new NotSupportedException($"'{str}' is not an available MoviesOrderBy enum."),
-            };
-        }
-
-        public OrderDirection MapMoviesOrderDirectionStringToEnum(string str)
-        {
-            return str.ToLower() switch
-            {
-                "asc" => OrderDirection.Ascending,
-                "desc" => OrderDirection.Descending,
-                _ => throw new NotSupportedException($"'{str}' is not a valid order."),
             };
         }
     }

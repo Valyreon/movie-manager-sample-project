@@ -47,7 +47,7 @@ namespace DataLayer
                     new object[] { rating.Id, rating.Value, rating.UserId, rating.MovieId, DateTime.Now, DateTime.Now });
             }
 
-            foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)
+            /*foreach (var tvShowid in InitialData.TVShowActorsConnections.Keys)
             {
                 foreach (var actorId in InitialData.TVShowActorsConnections[tvShowid])
                 {
@@ -56,7 +56,7 @@ namespace DataLayer
                     new string[] { "ActorsId", "StarredInTvShowsId" },
                     new object[] { actorId, tvShowid });
                 }
-            }
+            }*/
 
             foreach (var movieId in InitialData.MovieActorsConnections.Keys)
             {

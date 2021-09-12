@@ -12,7 +12,6 @@ namespace ServiceLayer.Responses
         public string CoverPath { get; set; }
 
         public IEnumerable<string> Actors { get; set; }
-        public IEnumerable<RatingData> Ratings { get; set; }
 
         public double? AverageRating { get; set; }
     }

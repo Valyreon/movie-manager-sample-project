@@ -88,7 +88,7 @@ namespace DataLayer.Repositories
                                      : query.OrderByDescending(ratingSelectorHasValue)
                                             .ThenByDescending(ratingSelector);
                 case MoviesOrderBy.Release:
-                    Func<RatedMovie, DateTime> releaseSelector = r => r.Movie.ReleaseDate;
+                    Func<RatedMovie, DateTimeOffset> releaseSelector = r => r.Movie.ReleaseDate;
                     return (ascending ? query.OrderBy(releaseSelector)
                                       : query.OrderByDescending(releaseSelector));
                 default:

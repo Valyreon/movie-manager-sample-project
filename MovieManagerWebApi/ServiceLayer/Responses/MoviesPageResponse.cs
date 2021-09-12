@@ -3,8 +3,11 @@ using ServiceLayer.Responses.JsonModels;
 
 namespace ServiceLayer.Responses
 {
-    public class MoviesPageResponse : MediaPageResponse<MovieListItem>
+    public class MoviesPageResponse
     {
-        public override IEnumerable<MovieListItem> Items { get; set; }
+        public IEnumerable<MovieListItem> Items { get; set; }
+        public int PageNumber { get; set; }
+        public int TotalPages { get; set; }
+        public int PageSize { get; set; }
     }
 }
