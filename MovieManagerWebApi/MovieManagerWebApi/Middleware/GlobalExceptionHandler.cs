@@ -3,6 +3,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using ServiceLayer.Exceptions;
 
 namespace MovieManagerWebApi.Middleware
 {
@@ -28,6 +29,10 @@ namespace MovieManagerWebApi.Middleware
 
                 response.StatusCode = error switch
                 {
+                    InvalidLoginCredentialsException _ => (int)HttpStatusCode.Unauthorized,
+                    EntityNotFoundException _ => (int)HttpStatusCode.NotFound,
+                    UserAlreadyExistsException _ => (int)HttpStatusCode.Conflict,
+                    PasswordTooWeakException _ => (int)HttpStatusCode.Forbidden,
                     _ => (int)HttpStatusCode.InternalServerError,// unhandled error
                 };
 

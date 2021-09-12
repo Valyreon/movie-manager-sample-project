@@ -1,4 +1,5 @@
 ﻿using DataLayer.Interfaces;
+using ServiceLayer.Exceptions;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses.JsonModels;
@@ -28,7 +29,7 @@ namespace ServiceLayer
             // check if user exists
             if (user == null)
             {
-                throw new Exception("Invalid user."); // TODO: custom exception
+                throw new EntityNotFoundException("User not found.");
             }
 
             // get the specified movie with id
@@ -37,7 +38,7 @@ namespace ServiceLayer
             // check if movie exists
             if (movie == null)
             {
-                throw new Exception("Invalid mvoie id."); //TODO: custom exception
+                throw new EntityNotFoundException("Movie not found.");
             }
 
             // get review by this user for speicfied movie

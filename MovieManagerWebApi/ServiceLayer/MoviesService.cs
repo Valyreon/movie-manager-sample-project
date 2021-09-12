@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataLayer.Interfaces;
+using ServiceLayer.Exceptions;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses;
@@ -26,7 +27,7 @@ namespace ServiceLayer
 
             if (movie == null)
             {
-                throw new Exception("No item with that id."); // TODO: custom exception
+                throw new EntityNotFoundException("Movie not found.");
             }
 
             return mappingService.MapMovieToDetailsResponse(movie);

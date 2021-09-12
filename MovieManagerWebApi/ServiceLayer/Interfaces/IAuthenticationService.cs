@@ -6,6 +6,6 @@ namespace ServiceLayer.Interfaces
     public interface IAuthenticationService
     {
         public LoginResponse Login(LoginRequest request);
-        public SignupResponse Signup(SignupRequest request);
+        public void Signup(SignupRequest request);
     }
 }

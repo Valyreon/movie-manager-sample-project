@@ -19,15 +19,16 @@ namespace MovieManagerWebApi.Controllers
         }
 
         [HttpPost]
-        public LoginResponse Login([FromBody] LoginRequest request)
+        public ActionResult<LoginResponse> Login([FromBody] LoginRequest request)
         {
             return authenticationService.Login(request);
         }
 
         [HttpPost]
-        public SignupResponse Signup([FromBody] SignupRequest request)
+        public ActionResult Signup([FromBody] SignupRequest request)
         {
-            return authenticationService.Signup(request);
+            authenticationService.Signup(request);
+            return Ok();
         }
     }
 }

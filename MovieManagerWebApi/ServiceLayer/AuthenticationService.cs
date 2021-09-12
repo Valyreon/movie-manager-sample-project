@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using DataLayer.Interfaces;
 using Domain;
 using Microsoft.IdentityModel.Tokens;
+using ServiceLayer.Exceptions;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses;
@@ -26,56 +27,48 @@ namespace ServiceLayer
         {
             var user = uow.Users.GetUserByEmail(request.Email);
 
+            // if user with that email does not exist
             if (user == null)
             {
-                return LoginResponse.InvalidCreds;
+                throw new InvalidLoginCredentialsException("No user matches those credentials.");
             }
 
+            // check password
             var validCreds = user.IsPasswordValid(request.Password);
 
+            // if password is not valid
             if (!validCreds)
             {
-                return LoginResponse.InvalidCreds;
+                throw new InvalidLoginCredentialsException("No user matches those credentials.");
             }
 
+            // everything is okay, generate token for user
             return new LoginResponse
             {
-                Success = true,
-                Message = "Successful login.",
                 Token = GenerateAccessToken(user.Email, user.Username)
             };
         }
 
 
-        public SignupResponse Signup(SignupRequest request)
+        public void Signup(SignupRequest request)
         {
             // check password strength
             if (!IsPasswordStrongEnough(request.Password))
             {
-                return new SignupResponse()
-                {
-                    Success = false,
-                    Message = "Your password is too weak. Password must have one uppercase, one lowercase letter, a number and must be 6 or more characters long."
-                };
+                throw new PasswordTooWeakException("Your password is too weak. Password must have one uppercase, " +
+                    "one lowercase letter, a number and must be 6 or more characters long.");
             }
 
             // check if email is already used
             if (uow.Users.GetUserByEmail(request.Email) != null)
             {
-                return new SignupResponse()
-                {
-                    Success = false,
-                    Message = "Email is already taken."
-                };
+                throw new UserAlreadyExistsException("Email is already taken.");
             }
 
+            // check if username already exists
             if (uow.Users.GetUserByUsername(request.Username) != null)
             {
-                return new SignupResponse()
-                {
-                    Success = false,
-                    Message = "Username is already taken."
-                };
+                throw new UserAlreadyExistsException("Username is already taken.");
             }
 
             var newUser = new User
@@ -89,12 +82,6 @@ namespace ServiceLayer
             newUser.SetPassword(request.Password);
             uow.Users.Add(newUser);
             uow.Commit();
-
-            return new SignupResponse()
-            {
-                Success = true,
-                Message = "Successful signup."
-            };
         }
 
         private bool IsPasswordStrongEnough(string password)
