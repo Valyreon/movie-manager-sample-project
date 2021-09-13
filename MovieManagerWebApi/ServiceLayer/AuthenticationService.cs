@@ -45,7 +45,7 @@ namespace ServiceLayer
             // everything is okay, generate token for user
             return new LoginResponse
             {
-                Token = GenerateAccessToken(user.Email, user.Username)
+                Token = GenerateAccessToken(user, request.RememberMe)
             };
         }
 
@@ -90,14 +90,23 @@ namespace ServiceLayer
             return Regex.IsMatch(password, "^(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z]).{6,}$");
         }
 
-        private string GenerateAccessToken(string email, string username)
+        private string GenerateAccessToken(User user, bool rememberMe = false)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("secretsecretsecret"));
+            var keyString = Environment.GetEnvironmentVariable("MovieManagerJwtKey");
+
+            if(keyString == null)
+            {
+                throw new KeyNotFoundException("Jwt key environment variable not found.");
+            }
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyString ?? "secret"));
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, username),
-                new Claim(ClaimTypes.Email, email)
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim("About", user.About),
+                new Claim("IsPrivate", user.IsPrivate.ToString())
             };
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
@@ -106,7 +115,7 @@ namespace ServiceLayer
                 null,
                 null,
                 claims,
-                expires: DateTime.Now.AddDays(90),
+                expires: rememberMe ? DateTime.Now.AddDays(90) : (DateTime?)null,
                 signingCredentials: signingCredentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

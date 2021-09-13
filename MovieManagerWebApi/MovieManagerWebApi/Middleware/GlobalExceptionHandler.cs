@@ -36,7 +36,13 @@ namespace MovieManagerWebApi.Middleware
                     _ => (int)HttpStatusCode.InternalServerError,// unhandled error
                 };
 
-                var result = JsonSerializer.Serialize(new { message = error?.Message });
+                var message = response.StatusCode switch
+                {
+                    (int)HttpStatusCode.InternalServerError => "Something went wrong.",
+                    _ => error?.Message
+                };
+
+                var result = JsonSerializer.Serialize(new { message = message });
                 await response.WriteAsync(result);
             }
         }
