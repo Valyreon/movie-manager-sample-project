@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace MovieManagerWebApi.Middleware
             }
             catch (Exception error)
             {
+                LogToLocalFile(error);
                 var response = context.Response;
                 response.ContentType = "application/json";
 
@@ -42,8 +44,17 @@ namespace MovieManagerWebApi.Middleware
                     _ => error?.Message
                 };
 
-                var result = JsonSerializer.Serialize(new { message = message });
+                var result = JsonSerializer.Serialize(new { Error = new { message } });
                 await response.WriteAsync(result);
+            }
+        }
+
+        public static void LogToLocalFile(Exception ex)
+        {
+            const string logPath = @"C:\Users\Luka\Desktop\log.txt";
+            if (File.Exists(logPath))
+            {
+                File.AppendAllText(logPath, "\n=================================================\n" + $"Message: {ex.Message}\n\n" + ex.StackTrace);
             }
         }
     }

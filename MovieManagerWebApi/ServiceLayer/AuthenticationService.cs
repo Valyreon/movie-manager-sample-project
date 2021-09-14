@@ -92,9 +92,9 @@ namespace ServiceLayer
 
         private string GenerateAccessToken(User user, bool rememberMe = false)
         {
-            var keyString = Environment.GetEnvironmentVariable("MovieManagerJwtKey");
+            var keyString = "SecretJwtStringToUseForJwt";//Environment.GetEnvironmentVariable("MovieManagerJwtKey");
 
-            if(keyString == null)
+            if (keyString == null)
             {
                 throw new KeyNotFoundException("Jwt key environment variable not found.");
             }
@@ -104,9 +104,7 @@ namespace ServiceLayer
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("About", user.About),
-                new Claim("IsPrivate", user.IsPrivate.ToString())
+                new Claim(ClaimTypes.Email, user.Email)
             };
 
             var signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
