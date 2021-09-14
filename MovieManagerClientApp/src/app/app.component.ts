@@ -1,3 +1,4 @@
+import { LoginService } from './sections/login/services/login.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Movie Catalog';
+
+  constructor(public loginService: LoginService) {}
 }

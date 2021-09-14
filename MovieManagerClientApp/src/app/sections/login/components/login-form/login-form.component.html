@@ -1,4 +1,4 @@
-<form id="login-form">
+<form id="login-form" [formGroup]="loginForm">
   <mat-card id="login-card">
     <mat-card-header>
       <div
@@ -19,8 +19,7 @@
               matInput
               type="text"
               [(ngModel)]="loginRequest.email"
-              name="email"
-              required
+              formControlName="email"
             />
             <button
               *ngIf="loginRequest.email"
@@ -31,6 +30,9 @@
             >
               <mat-icon>close</mat-icon>
             </button>
+            <mat-error *ngIf="loginForm.controls.email.hasError('email')">
+              Please enter a valid email address.
+            </mat-error>
           </mat-form-field>
         </tr>
         <tr>
@@ -40,8 +42,7 @@
               matInput
               type="password"
               [(ngModel)]="loginRequest.password"
-              name="password"
-              required
+              formControlName="password"
             />
             <button
               *ngIf="loginRequest.password"
@@ -58,7 +59,7 @@
           <mat-checkbox
             color="primary"
             [(ngModel)]="loginRequest.rememberMe"
-            name="rememberMe"
+            formControlName="rememberMe"
             >Remember me</mat-checkbox
           >
         </tr>
@@ -66,9 +67,10 @@
     </mat-card-content>
     <mat-card-actions>
       <div id="submit-button-wrapper">
-        <button mat-flat-button color="primary" id="submit-button">
+        <button mat-flat-button color="primary" id="submit-button" (click)="handleSubmitClick()" *ngIf="!processing">
           SUBMIT
         </button>
+        <mat-spinner [diameter]="50" *ngIf="processing"></mat-spinner>
       </div>
     </mat-card-actions>
     <mat-card-footer>

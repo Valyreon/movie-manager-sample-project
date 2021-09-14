@@ -6,12 +6,14 @@
       Home
     </button>
     <span class="flex-spacer"></span>
+    <ng-container *ngIf="!this.loginService.isLoggedIn">
     <button mat-button routerLink="/login" routerLinkActive="active-nav">
       Login
     </button>
     <button mat-button routerLink="/signup" routerLinkActive="active-nav">
       Signup
     </button>
+  </ng-container>
   </mat-toolbar>
   <div id="site-content">
     <router-outlet></router-outlet>
