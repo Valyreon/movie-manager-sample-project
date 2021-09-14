@@ -1,1 +1,133 @@
-<p>signup-form works!</p>
+<form id="signup-form" [formGroup]="signupForm">
+  <mat-card id="signup-card">
+    <mat-card-header>
+      <div
+        mat-card-avatar
+        style="display: flex; align-items: center; justify-content: center"
+      >
+        <mat-icon>account_box</mat-icon>
+      </div>
+      <mat-card-title>Signup</mat-card-title>
+      <mat-card-subtitle
+        >Please fill in the details below to register.</mat-card-subtitle
+      >
+    </mat-card-header>
+    <mat-card-content>
+      <table class="w-100">
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Email</mat-label>
+              <input matInput type="text" formControlName="email" />
+              <button
+                *ngIf="signupForm.controls.email.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="signupForm.controls.email.value = ''"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+              <mat-error *ngIf="signupForm.controls.email.hasError('email')">
+                Please enter a valid email address.
+              </mat-error>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Username</mat-label>
+              <input matInput type="text" formControlName="username" />
+              <button
+                *ngIf="signupForm.controls.username.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="signupForm.controls.username.value = ''"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Password</mat-label>
+              <input matInput type="password" formControlName="password" />
+              <button
+                *ngIf="signupForm.controls.password.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="signupForm.controls.password.value = ''"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <mat-form-field appearance="fill" class="w-100">
+              <mat-label>Confirm Password</mat-label>
+              <input
+                matInput
+                type="password"
+                formControlName="confirmPassword"
+              />
+              <button
+                *ngIf="signupForm.controls.confirmPassword.value"
+                matSuffix
+                mat-icon-button
+                aria-label="Clear"
+                (click)="signupForm.controls.confirmPassword.value = ''"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </mat-form-field>
+          </td>
+        </tr>
+        <tr>
+            <td>
+                <mat-form-field appearance="fill" class="w-100">
+              <mat-label>About</mat-label>
+              <textarea
+                matInput
+                formControlName="about"
+              ></textarea>
+            </mat-form-field>
+            </td>
+        </tr>
+        <tr style="text-align: center">
+          <mat-checkbox
+            color="primary"
+            formControlName="isPrivate"
+            >Private</mat-checkbox
+          >
+        </tr>
+      </table>
+    </mat-card-content>
+    <mat-card-actions>
+      <div id="submit-button-wrapper">
+        <button
+          mat-flat-button
+          color="primary"
+          id="submit-button"
+          (click)="handleSubmitClick()"
+          *ngIf="!processing"
+        >
+          SUBMIT
+        </button>
+        <mat-spinner [diameter]="50" *ngIf="processing"></mat-spinner>
+      </div>
+    </mat-card-actions>
+    <mat-card-footer>
+      <div id="signup-footer">
+        Already registered? Login
+        <a class="custom-link" href="#" routerLink="/login">here</a>.
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</form>

@@ -11,11 +11,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginFormComponent implements OnInit {
   processing: boolean = false;
-  loginRequest: ILoginRequest;
   loginForm: FormGroup;
 
   constructor(private loginService: LoginService, private router: Router, public fb: FormBuilder) {
-    this.loginRequest = { email: "", password: "", rememberMe: false }
    }
 
   ngOnInit(): void {
@@ -24,9 +22,9 @@ export class LoginFormComponent implements OnInit {
     }
 
     this.loginForm = this.fb.group({
-      email: [this.loginRequest.email, Validators.compose([Validators.required, Validators.email])],
-      password: [this.loginRequest.password, Validators.required],
-      rememberMe: [this.loginRequest.rememberMe]
+      email: ["", Validators.compose([Validators.required, Validators.email])],
+      password: ["", Validators.required],
+      rememberMe: [false]
     });
    }
 
@@ -36,7 +34,14 @@ export class LoginFormComponent implements OnInit {
     }
 
     this.processing = true;
-    this.loginService.login(this.loginRequest).subscribe({
+
+    var loginRequest = {
+      email: this.loginForm.controls.email.value,
+      password: this.loginForm.controls.password.value,
+      rememberMe: this.loginForm.controls.rememberMe.value,
+    };
+
+    this.loginService.login(loginRequest).subscribe({
       next(response) { this.processing = false;},
       error(err) { this.processing = false; },
       complete() { this.processing = false; this.router.navigate(['']); }

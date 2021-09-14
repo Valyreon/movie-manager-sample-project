@@ -1,0 +1,35 @@
+#signup-card {
+    max-width: 600px;
+    width: 600px;
+}
+
+:host {
+    align-items: center;
+    display: flex;
+}
+
+#submit-button-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+#submit-button {
+    min-width: 150px;
+}
+
+@media only screen and (max-width: 400px) {
+  #submit-button {
+    width: 100%;
+    min-width: none;
+    }
+
+#signup-card {
+    width: 100%;
+}
+}
+
+#signup-footer {
+    text-align: center;
+    margin-bottom: 10px;
+    color: rgba(0,0,0,.54);
+}

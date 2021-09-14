@@ -18,15 +18,14 @@
             <input
               matInput
               type="text"
-              [(ngModel)]="loginRequest.email"
-              formControlName="email"
+              [formControl]="loginForm.controls.email"
             />
             <button
-              *ngIf="loginRequest.email"
+              *ngIf="loginForm.controls.email.value"
               matSuffix
               mat-icon-button
               aria-label="Clear"
-              (click)="loginRequest.email = ''"
+              (click)="loginForm.controls.email.value = ''"
             >
               <mat-icon>close</mat-icon>
             </button>
@@ -41,15 +40,14 @@
             <input
               matInput
               type="password"
-              [(ngModel)]="loginRequest.password"
-              formControlName="password"
+              [formControl]="loginForm.controls.password"
             />
             <button
-              *ngIf="loginRequest.password"
+              *ngIf="loginForm.controls.password.value"
               matSuffix
               mat-icon-button
               aria-label="Clear"
-              (click)="loginRequest.password = ''"
+              (click)="loginForm.controls.password.value = ''"
             >
               <mat-icon>close</mat-icon>
             </button>
@@ -58,8 +56,7 @@
         <tr style="text-align: center">
           <mat-checkbox
             color="primary"
-            [(ngModel)]="loginRequest.rememberMe"
-            formControlName="rememberMe"
+            [formControl]="loginForm.controls.rememberMe"
             >Remember me</mat-checkbox
           >
         </tr>

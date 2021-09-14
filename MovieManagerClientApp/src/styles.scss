@@ -8,3 +8,14 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     text-decoration: none;
     font-weight: 500;
 }
+
+
+.col-6 { width: 50%; }
+.col-12 { width: 100%; }
+
+@media only screen and (max-width: 400px) {
+    .col-s-6 { width: 50% !important; }
+    .col-s-12 { width: 100% !important; }
+}
+
+.row {}
