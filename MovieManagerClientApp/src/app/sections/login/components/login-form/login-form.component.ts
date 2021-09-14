@@ -3,33 +3,39 @@ import { Component, OnInit } from '@angular/core';
 import { ILoginRequest } from '../../interfaces/login-request';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { fadeInAnimation } from 'src/app/animations/fade-in-animation';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss']
+  styleUrls: ['./login-form.component.scss'],
+  animations: [fadeInAnimation],
+  host: { '[@fadeInAnimation]': '' },
 })
 export class LoginFormComponent implements OnInit {
   processing: boolean = false;
   loginForm: FormGroup;
 
-  constructor(private loginService: LoginService, private router: Router, public fb: FormBuilder) {
-   }
+  constructor(
+    private loginService: LoginService,
+    private router: Router,
+    public fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
-    if(this.loginService.isLoggedIn) {
+    if (this.loginService.isLoggedIn) {
       this.router.navigate(['']);
     }
 
     this.loginForm = this.fb.group({
-      email: ["", Validators.compose([Validators.required, Validators.email])],
-      password: ["", Validators.required],
-      rememberMe: [false]
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      password: ['', Validators.required],
+      rememberMe: [false],
     });
-   }
+  }
 
   handleSubmitClick() {
-    if(this.loginForm.invalid) {
+    if (this.loginForm.invalid) {
       return;
     }
 
@@ -42,9 +48,16 @@ export class LoginFormComponent implements OnInit {
     };
 
     this.loginService.login(loginRequest).subscribe({
-      next(response) { this.processing = false;},
-      error(err) { this.processing = false; },
-      complete() { this.processing = false; this.router.navigate(['']); }
+      next(response) {
+        this.processing = false;
+      },
+      error(err) {
+        this.processing = false;
+      },
+      complete() {
+        this.processing = false;
+        this.router.navigate(['']);
+      },
     });
   }
 }

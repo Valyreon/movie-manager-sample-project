@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { fadeInAnimation } from 'src/app/animations/fade-in-animation';
 import { LoginService } from 'src/app/sections/login/services/login.service';
-import { ISignupRequest } from '../../interfaces/signup-request';
 import { SignupService } from '../../services/signup.service';
 
 @Component({
   selector: 'app-signup-form',
   templateUrl: './signup-form.component.html',
   styleUrls: ['./signup-form.component.scss'],
+  animations: [fadeInAnimation],
+  host: { '[@fadeInAnimation]': '' },
 })
 export class SignupFormComponent implements OnInit {
   processing: boolean = false;
@@ -19,9 +21,7 @@ export class SignupFormComponent implements OnInit {
     private loginService: LoginService,
     private router: Router,
     public fb: FormBuilder
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     if (this.loginService.isLoggedIn) {
@@ -29,15 +29,12 @@ export class SignupFormComponent implements OnInit {
     }
 
     this.signupForm = this.fb.group({
-      email: [
-        "",
-        Validators.compose([Validators.required, Validators.email]),
-      ],
-      password: ["", Validators.required],
-      confirmPassword: ["", Validators.required],
-      username: ["", Validators.required],
-      about: [""],
-      isPrivate: [true]
+      email: ['', Validators.compose([Validators.required, Validators.email])],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
+      username: ['', Validators.required],
+      about: [''],
+      isPrivate: [true],
     });
   }
 
