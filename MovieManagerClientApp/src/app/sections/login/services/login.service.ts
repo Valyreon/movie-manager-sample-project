@@ -1,23 +1,18 @@
-import { CookieService } from './../../../services/cookie.service';
 import { ILoginResponse } from './../interfaces/login-response';
 import { ILoginRequest } from './../interfaces/login-request';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoginService {
   private readonly URL = 'https://localhost:44321/api/Auth/Login';
-  public isLoggedIn: boolean;
-  public token: string;
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    var token = this.cookieService.getLoginCookie();
-    this.isLoggedIn = !!token;
-    this.token = token;
+  constructor(private http: HttpClient, private authService: AuthService) {
   }
 
   login(request: ILoginRequest): Observable<string> {
@@ -26,10 +21,7 @@ export class LoginService {
       map(r => {
         console.log(r);
         if(!!!r.error) {
-          this.cookieService.setloginCookie(r.token, request.rememberMe);
-          this.isLoggedIn = true;
-          this.token = r.token;
-          console.log("null")
+          this.authService.setToken(r.token, request.rememberMe);
           return null;
         }
         console.log(r.error.message);

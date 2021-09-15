@@ -9,6 +9,7 @@ import { LoginModule } from './sections/login/login.module';
 import { SignupModule } from './sections/signup/signup.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { HomeModule } from './sections/home/home.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     AngularMaterialModule,
     LoginModule,
     SignupModule,
+    HomeModule,
     FormsModule,
     HttpClientModule
   ],

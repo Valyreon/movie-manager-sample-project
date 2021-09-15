@@ -1,5 +1,5 @@
-using ServiceLayer.Attributes;
 using System.ComponentModel.DataAnnotations;
+using ServiceLayer.Attributes;
 
 namespace ServiceLayer.Requests
 {
@@ -11,8 +11,8 @@ namespace ServiceLayer.Requests
         public int PageNumber { get; set; } = 0;
         [Range(1, 100)]
         public int PageSize { get; set; } = 10;
-        [AllowedStringValues("title", "review", "release")]
-        public string OrderBy { get; set; } = "review";
+        [AllowedStringValues("title", "rating", "release")]
+        public string OrderBy { get; set; } = "rating";
         public bool Ascending { get; set; } = false;
     }
 }

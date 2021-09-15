@@ -6,7 +6,7 @@
       Home
     </button>
     <span class="flex-spacer"></span>
-    <ng-container *ngIf="!this.loginService.isLoggedIn">
+    <ng-container *ngIf="!this.authService.isLoggedIn">
     <button mat-button routerLink="/login" routerLinkActive="active-nav">
       Login
     </button>

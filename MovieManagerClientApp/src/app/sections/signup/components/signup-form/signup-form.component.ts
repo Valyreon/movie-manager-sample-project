@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { fadeInAnimation } from 'src/app/animations/fade-in-animation';
 import { LoginService } from 'src/app/sections/login/services/login.service';
+import { AuthService } from 'src/app/services/auth-service.service';
 import { SignupService } from '../../services/signup.service';
 
 @Component({
@@ -18,13 +19,13 @@ export class SignupFormComponent implements OnInit {
 
   constructor(
     private signupService: SignupService,
-    private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
     public fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    if (this.loginService.isLoggedIn) {
+    if (this.authService.isLoggedIn) {
       this.router.navigate(['']);
     }
 

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using DataLayer.Interfaces;
@@ -42,7 +41,7 @@ namespace ServiceLayer
             {
                 Items = PageItems.Select(mappingService.MapMovieToListItem),
                 PageNumber = request.PageNumber + 1,
-                PageSize = 10,
+                PageSize = request.PageSize,
                 TotalPages = TotalNumberOfPages
             };
         }

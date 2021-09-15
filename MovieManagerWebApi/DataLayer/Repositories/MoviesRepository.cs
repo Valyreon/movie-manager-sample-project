@@ -1,12 +1,12 @@
-﻿using DataLayer.Enums;
-using DataLayer.Interfaces;
-using DataLayer.Parameters;
-using Domain;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DataLayer.Enums;
+using DataLayer.Interfaces;
+using DataLayer.Parameters;
+using Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace DataLayer.Repositories
 {
@@ -29,7 +29,7 @@ namespace DataLayer.Repositories
 
         public MoviesRepository(MovieDbContext context) : base(context)
         {
-            
+
         }
 
         public Movie GetMovieWithLoadedData(int id)
@@ -74,13 +74,13 @@ namespace DataLayer.Repositories
 
         private IEnumerable<RatedMovie> SetOrder(IQueryable<RatedMovie> query, MoviesOrderBy orderBy, bool ascending)
         {
-            switch(orderBy)
+            switch (orderBy)
             {
                 case MoviesOrderBy.Title:
                     Func<RatedMovie, string> titleSelector = r => r.Movie.Title;
-                    return (ascending ? query.OrderBy(titleSelector)
-                                      : query.OrderByDescending(titleSelector));
-                case MoviesOrderBy.Review:
+                    return ascending ? query.OrderBy(titleSelector)
+                                      : query.OrderByDescending(titleSelector);
+                case MoviesOrderBy.Rating:
                     Func<RatedMovie, bool> reviewSelectorHasValue = r => r.AverageReview.HasValue;
                     Func<RatedMovie, double?> reviewSelector = r => r.AverageReview;
                     return ascending ? query.OrderBy(reviewSelectorHasValue)
@@ -89,8 +89,8 @@ namespace DataLayer.Repositories
                                             .ThenByDescending(reviewSelector);
                 case MoviesOrderBy.Release:
                     Func<RatedMovie, DateTimeOffset> releaseSelector = r => r.Movie.ReleaseDate;
-                    return (ascending ? query.OrderBy(releaseSelector)
-                                      : query.OrderByDescending(releaseSelector));
+                    return ascending ? query.OrderBy(releaseSelector)
+                                      : query.OrderByDescending(releaseSelector);
                 default:
                     throw new NotSupportedException("Unhandled enum.");
             }

@@ -72,10 +72,7 @@ namespace MovieManagerWebApi
         {
             app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieManager API V1");
-            });
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MovieManager API V1"));
 
             if (env.IsDevelopment())
             {
@@ -83,6 +80,7 @@ namespace MovieManagerWebApi
             }
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseAuthentication();
             app.UseRouting();
             app.UseCors();

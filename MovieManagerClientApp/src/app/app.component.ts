@@ -1,5 +1,6 @@
 import { LoginService } from './sections/login/services/login.service';
 import { Component } from '@angular/core';
+import { AuthService } from './services/auth-service.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +10,5 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Movie Catalog';
 
-  constructor(public loginService: LoginService) {}
+  constructor(public authService: AuthService) {}
 }

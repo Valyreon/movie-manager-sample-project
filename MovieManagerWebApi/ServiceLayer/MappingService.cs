@@ -22,8 +22,8 @@ namespace ServiceLayer
                 Title = movie.Title,
                 ReleaseYear = movie.ReleaseDate.Year,
                 CoverPath = movie.CoverPath,
-                AverageReview = averageReview.HasValue 
-                                        ? Math.Round(averageReview.Value, 1) 
+                AverageReview = averageReview.HasValue
+                                        ? Math.Round(averageReview.Value, 1)
                                         : (double?)null
             };
 
@@ -76,7 +76,7 @@ namespace ServiceLayer
             return str.ToLower() switch
             {
                 "title" => MoviesOrderBy.Title,
-                "review" => MoviesOrderBy.Review,
+                "rating" => MoviesOrderBy.Rating,
                 "release" => MoviesOrderBy.Release,
                 _ => throw new NotSupportedException($"'{str}' is not an available MoviesOrderBy enum."),
             };

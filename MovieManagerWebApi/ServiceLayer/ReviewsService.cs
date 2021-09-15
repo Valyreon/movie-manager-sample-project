@@ -1,12 +1,10 @@
-﻿using DataLayer.Interfaces;
+using System.Collections.Generic;
+using System.Linq;
+using DataLayer.Interfaces;
 using ServiceLayer.Exceptions;
 using ServiceLayer.Interfaces;
 using ServiceLayer.Requests;
 using ServiceLayer.Responses.JsonModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ServiceLayer
 {

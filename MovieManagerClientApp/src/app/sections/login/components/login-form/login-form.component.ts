@@ -4,6 +4,7 @@ import { ILoginRequest } from '../../interfaces/login-request';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInAnimation } from 'src/app/animations/fade-in-animation';
+import { AuthService } from 'src/app/services/auth-service.service';
 
 @Component({
   selector: 'app-login-form',
@@ -18,12 +19,13 @@ export class LoginFormComponent implements OnInit {
 
   constructor(
     private loginService: LoginService,
+    private authService: AuthService,
     private router: Router,
     public fb: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    if (this.loginService.isLoggedIn) {
+    if (this.authService.isLoggedIn) {
       this.router.navigate(['']);
     }
 

@@ -1,1 +1,62 @@
-<p>movies-paged-list works!</p>
+<div id="list-wrapper">
+  <form [formGroup]="filterForm">
+    <mat-card
+      id="filters"
+      style="
+        display: flex;
+        width: 100%;
+        align-items: center;
+        margin-bottom: 10px;
+      "
+    >
+      <div id="search-box" style="flex-grow: 1" class="filter-box">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            formControlName="token"
+            placeholder="Search titles and descriptions for..."
+          />
+          <mat-hint
+            >You can also use expressions: '4 stars', 'at least 3 stars', 'after
+            2015' or 'older than 3 years'.</mat-hint
+          >
+        </mat-form-field>
+      </div>
+      <div id="orderby-box" class="filter-box">
+        <mat-form-field appearance="fill">
+          <mat-label>Order by</mat-label>
+          <mat-select formControlName="orderBy">
+            <mat-option value="title">Title</mat-option>
+            <mat-option value="release">Release Year</mat-option>
+            <mat-option value="rating" selected>Rating</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div id="sort-box" class="filter-box">
+        <button
+          mat-icon-button
+          matTooltip="Toggle sort direction."
+          #tooltip="matTooltip"
+          (click)="handleSortDirectionButtonClick()"
+        >
+          <mat-icon>sort</mat-icon>
+        </button>
+        <mat-icon>{{
+          this.ascending ? "keyboard_arrow_up" : "keyboard_arrow_down"
+        }}</mat-icon>
+      </div>
+    </mat-card>
+  </form>
+  <mat-divider></mat-divider>
+  <div *ngIf="!!!movies || movies.length === 0" style="text-align: center; font-style: italic; color:gray; margin: 10px;">No movies matching current filter found.</div>
+  <div id="movieList" class="w-100" *ngIf="!!movies && movies.length > 0">
+    <app-movie-list-item
+      *ngFor="let movie of movies"
+      [movie]="movie"
+    ></app-movie-list-item>
+  </div>
+  <div style="display: flex; justify-content: center; align-items: center;" *ngIf="canLoadMore">
+      <button mat-stroked-button color="primary" (click)="loadNextPage()">Load More</button>
+  </div>
+</div>

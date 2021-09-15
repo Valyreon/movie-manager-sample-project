@@ -1,12 +1,9 @@
-﻿using DataLayer.Enums;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using DataLayer.Enums;
 
 namespace DataLayer.Parameters
 {
     public class MoviesPagingParameters : PagingParameters
     {
-        public MoviesOrderBy OrderBy { get; set; } = MoviesOrderBy.Review;
+        public MoviesOrderBy OrderBy { get; set; } = MoviesOrderBy.Rating;
     }
 }

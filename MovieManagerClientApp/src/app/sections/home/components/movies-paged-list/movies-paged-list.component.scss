@@ -1,0 +1,24 @@
+.filter-box {
+    padding: 0 5px;
+}
+
+#list-wrapper {
+    width: 842px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#sort-box {
+    display: flex;
+    align-items: center;
+
+}
+
+#filters {
+    padding: 20px;
+    background-color: #fafafa;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-sizing: border-box;
+}
