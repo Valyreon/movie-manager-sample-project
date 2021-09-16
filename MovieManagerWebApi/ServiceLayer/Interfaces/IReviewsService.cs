@@ -7,6 +7,7 @@ namespace ServiceLayer.Interfaces
     public interface IReviewsService
     {
         void Rate(ReviewRequest request, string userEmail);
-        IEnumerable<ReviewData> GetAllReviewsForMovie(int movieId);
+        IEnumerable<ReviewData> GetAllReviewsForMovie(int movieId, string userEmail = null);
+        ReviewData GetCurrentUsersReviewForMovie(int movieId, string userEmail);
     }
 }

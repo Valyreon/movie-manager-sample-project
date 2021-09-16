@@ -30,10 +30,15 @@ namespace MovieManagerWebApi.Controllers
 
         [Route("{movieId}")]
         [HttpGet]
-        public ActionResult<IEnumerable<ReviewData>> GetMovieReviews(int movieId)
+        public ActionResult<IEnumerable<ReviewData>> GetMovieReviews(int movieId, bool onlyCurrentUsersReview = false)
         {
             var currentUserEmail = ControllerContext.HttpContext.User.GetUserEmail();
-            return Ok(reviewsService.GetAllReviewsForMovie(movieId));
+
+            var result = onlyCurrentUsersReview
+                                ? new ReviewData[] { reviewsService.GetCurrentUsersReviewForMovie(movieId, currentUserEmail) }
+                                : reviewsService.GetAllReviewsForMovie(movieId, currentUserEmail);
+
+            return Ok(result);
         }
     }
 }

@@ -1,35 +1,38 @@
 #login-card {
-    max-width: 400px;
-    width: 400px;
+  min-width: 400px;
+  width: 40%;
+  box-sizing: border-box;
 }
 
 :host {
-    align-items: center;
-    display: flex;
+  align-items: center;
+  display: flex;
+  width: 100%;
 }
 
 #submit-button-wrapper {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 #submit-button {
-    min-width: 150px;
+  min-width: 150px;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
   #submit-button {
     width: 100%;
-    min-width: none;
-    }
+    min-width: 0px;
+  }
 
-#login-card {
+  #login-card {
+    min-width: 0px;
     width: 100%;
-}
+  }
 }
 
 #login-footer {
-    text-align: center;
-    margin-bottom: 10px;
-    color: rgba(0,0,0,.54);
+  text-align: center;
+  margin-bottom: 10px;
+  color: rgba(0, 0, 0, 0.54);
 }

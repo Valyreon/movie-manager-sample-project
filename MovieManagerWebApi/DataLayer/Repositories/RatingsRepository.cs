@@ -11,9 +11,16 @@ namespace DataLayer.Repositories
         {
         }
 
-        public IEnumerable<Review> GetAllReviewsForMovie(int movieId)
+        public IEnumerable<Review> GetAllReviewsForMovie(int movieId, int? excludeUserId = null)
         {
-            return context.Reviews.Where(r => r.MovieId == movieId);
+            var result = context.Reviews.Where(r => r.MovieId == movieId);
+
+            if(excludeUserId.HasValue)
+            {
+                result = result.Where(r => r.UserId != excludeUserId.Value);
+            }
+
+            return result;
         }
 
         public Review GetUserReviewForMovie(int movieId, int userId)

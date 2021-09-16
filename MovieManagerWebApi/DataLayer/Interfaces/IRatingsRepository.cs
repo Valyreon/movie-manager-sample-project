@@ -5,7 +5,7 @@ namespace DataLayer.Interfaces
 {
     public interface IReviewsRepository : IGenericRepository<Review>
     {
-        public Review GetUserReviewForMovie(int movieId, int userId);
-        public IEnumerable<Review> GetAllReviewsForMovie(int movieId);
+        Review GetUserReviewForMovie(int movieId, int userId);
+        IEnumerable<Review> GetAllReviewsForMovie(int movieId, int? excludeUserId = null);
     }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Component({
   selector: 'app-movie-detail-view',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MovieDetailViewComponent implements OnInit {
 
-  constructor() { }
+  constructor(private route: ActivatedRouteSnapshot) { }
+
+  fullPosterPath: string;
 
   ngOnInit(): void {
+
+
+    this.fullPosterPath = !!this.movie.coverPath
+      ? 'https://localhost:44321'+ this.movie.coverPath
+      : 'https://api.acomart.tv/images/video-placeholder.jpg';
   }
 
 }

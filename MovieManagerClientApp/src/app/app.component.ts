@@ -9,6 +9,16 @@ import { AuthService } from './services/auth-service.service';
 })
 export class AppComponent {
   title = 'Movie Catalog';
+  showMobileMenu: boolean = false;
 
   constructor(public authService: AuthService) {}
+
+  toggleMobileMenu() {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
+
+  logOut() {
+    console.log("loggin out");
+    this.authService.clearToken();
+  }
 }

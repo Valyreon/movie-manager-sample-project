@@ -56,9 +56,34 @@ namespace ServiceLayer
             uow.Commit();
         }
 
-        public IEnumerable<ReviewData> GetAllReviewsForMovie(int movieId)
+        public IEnumerable<ReviewData> GetAllReviewsForMovie(int movieId, string userEmail)
         {
-            return uow.Reviews.GetAllReviewsForMovie(movieId).Select(mappingService.MapReviewToReviewData);
+            // get the user with specified email (logged in user)
+            var user = uow.Users.GetUserByEmail(userEmail);
+
+            // check if user exists
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found.");
+            }
+
+            return uow.Reviews.GetAllReviewsForMovie(movieId, user.Id).Select(mappingService.MapReviewToReviewData);
+        }
+
+        public ReviewData GetCurrentUsersReviewForMovie(int movieId, string userEmail)
+        {
+            // get the user with specified email (logged in user)
+            var user = uow.Users.GetUserByEmail(userEmail);
+
+            // check if user exists
+            if (user == null)
+            {
+                throw new EntityNotFoundException("User not found.");
+            }
+
+            return mappingService.MapReviewToReviewData(
+                uow.Reviews.GetUserReviewForMovie(movieId, user.Id)
+            );
         }
     }
 }

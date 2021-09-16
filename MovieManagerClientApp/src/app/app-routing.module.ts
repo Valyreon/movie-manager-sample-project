@@ -1,3 +1,4 @@
+import { MovieDetailViewComponent } from './sections/home/components/movie-detail-view/movie-detail-view.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
@@ -10,6 +11,7 @@ const routes: Routes = [
   { path: 'signup', component: SignupFormComponent },
   { path: 'home', component: MoviesPagedListComponent },
   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'movie/:id', component: MovieDetailViewComponent },
 ];
 
 @NgModule({

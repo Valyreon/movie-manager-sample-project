@@ -1,7 +1,8 @@
-<mat-card style="max-height: 300px; display: flex; align-items: center; margin: 10px 0; border: 1px solid #ccc;">
+<mat-card class="movie-list-card">
     <div class="movie-poster" style="margin-right: 20px;"><img height="120" [src]="fullPosterPath"></div>
     <div class="movie-info" style="flex-grow: 1;">
-        <div class="movie-title" style="font-size: 18px; font-weight: 500;">{{ movie.title }} <span style="color:lightslategray;">({{ movie.releaseYear }})</span></div>
+        <div class="movie-title">{{ movie.title }} <span style="color:lightslategray;">({{ movie.releaseYear }})</span></div>
+        <button class="details-button" routerLink="/movie/{{movie.id}}" mat-stroked-button>Details</button>
     </div>
     <div class="movie-rating">
         <mat-icon style="color: rgb(246, 202, 44);" class="star">star</mat-icon>

@@ -43,7 +43,7 @@ namespace DataLayer.Repositories
         public (IEnumerable<Movie> PageItems, int TotalNumberOfPages) Page(MoviesPagingParameters parameters)
         {
             var query = context.Movies.Include(m => m.Reviews)
-                    .Select(m => new RatedMovie { Movie = m, AverageReview = m.Reviews.Average(r => r.Rating) });
+                    .Select(m => new RatedMovie { Movie = m, AverageReview = m.Reviews.Any() ? m.Reviews.Average(r => r.Rating) : (double?)null });
 
             var trimmedToken = parameters.Token == null ? "" : parameters.Token.Trim();
             var matchingRegexFound = false;
@@ -60,8 +60,8 @@ namespace DataLayer.Repositories
             if (!matchingRegexFound && !string.IsNullOrWhiteSpace(trimmedToken))
             {
                 query = query.Where(
-                    m => EF.Functions.Like(m.Movie.Title, $"%{trimmedToken}%")
-                                || EF.Functions.Like(m.Movie.Description, $"%{trimmedToken}%"));
+                    m => EF.Functions.ILike(m.Movie.Title, $"%{trimmedToken}%")
+                                || EF.Functions.ILike(m.Movie.Description, $"%{trimmedToken}%"));
             }
 
             // ordering and paging

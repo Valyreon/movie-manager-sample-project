@@ -1,33 +1,51 @@
 <div id="content-wrapper" role="main">
   <mat-toolbar id="navbar" role="banner">
     <mat-icon id="logo-icon">movie</mat-icon>
-    <span id="toolbar-site-name">Movie Catalog</span>
+    <span class="toolbar-site-name">Movie Catalog</span>
     <button mat-button routerLink="/home" routerLinkActive="active-nav">
       Home
     </button>
     <span class="flex-spacer"></span>
     <ng-container *ngIf="!this.authService.isLoggedIn">
-    <button mat-button routerLink="/login" routerLinkActive="active-nav">
-      Login
+      <button mat-button routerLink="/login" routerLinkActive="active-nav">
+        Login
+      </button>
+      <button mat-button routerLink="/signup" routerLinkActive="active-nav">
+        Signup
+      </button>
+    </ng-container>
+    <button *ngIf="this.authService.isLoggedIn" mat-button (click)="logOut()">
+      Log Out
     </button>
-    <button mat-button routerLink="/signup" routerLinkActive="active-nav">
-      Signup
-    </button>
-  </ng-container>
   </mat-toolbar>
+  <div id="mobile-navbar">
+    <div id="mobile-navbar-header"><button mat-icon-button (click)="toggleMobileMenu()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div>Movie Catalog</div>
+      <div style="flex-grow: 1;"></div>
+      <button mat-icon-button (click)="logOut()" *ngIf="this.authService.isLoggedIn">
+        <mat-icon>exit_to_app</mat-icon>
+      </button>
+    </div>
+    <ng-container *ngIf="showMobileMenu">
+      <a routerLink="/home" routerLinkActive="active-nav">
+        <div class="mobile-navbar-button">Home</div>
+      </a>
+      <ng-container *ngIf="!this.authService.isLoggedIn">
+        <a routerLink="/login" routerLinkActive="active-nav">
+          <div class="mobile-navbar-button">Login</div>
+        </a>
+        <a routerLink="/signup" routerLinkActive="active-nav">
+          <div class="mobile-navbar-button">Signup</div>
+        </a>
+      </ng-container>
+    </ng-container>
+  </div>
   <div id="site-content">
     <router-outlet></router-outlet>
   </div>
   <footer id="footer">
-    <div>
-      <a
-        class="github-button"
-        href="https://github.com/Valyreon/movie-manager-sample-project"
-        data-icon="octicon-star"
-        aria-label="Star Valyreon/movie-manager-sample-project on GitHub"
-        >Star</a
-      >
-    </div>
     <div style="text-align: center;">
       Created and maintained by
       <a class="custom-link" href="https://github.com/Valyreon">Luka B</a>.

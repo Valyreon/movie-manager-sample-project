@@ -25,7 +25,6 @@ namespace DataLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.LogTo(LogToLocalFile);
             if (optionsBuilder.IsConfigured)
             {
                 return;
@@ -37,15 +36,6 @@ namespace DataLayer
                 .Build();
             var connectionString = configuration.GetConnectionString("MoviesDatabasePostgre");
             optionsBuilder.UseNpgsql(connectionString);
-        }
-
-        public static void LogToLocalFile(string text)
-        {
-            string logPath = @"C:\Users\luka.budrak\Desktop\log.txt";
-            if (File.Exists(logPath))
-            {
-                File.AppendAllText(logPath, "\n=================================================\n}" + text);
-            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

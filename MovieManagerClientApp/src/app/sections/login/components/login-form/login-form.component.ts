@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInAnimation } from 'src/app/animations/fade-in-animation';
 import { AuthService } from 'src/app/services/auth-service.service';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login-form',
@@ -16,6 +17,7 @@ import { AuthService } from 'src/app/services/auth-service.service';
 export class LoginFormComponent implements OnInit {
   processing: boolean = false;
   loginForm: FormGroup;
+  error: string = null;
 
   constructor(
     private loginService: LoginService,
@@ -37,11 +39,10 @@ export class LoginFormComponent implements OnInit {
   }
 
   handleSubmitClick() {
+    this.error = null;
     if (this.loginForm.invalid) {
       return;
     }
-
-    this.processing = true;
 
     var loginRequest = {
       email: this.loginForm.controls.email.value,
@@ -50,14 +51,14 @@ export class LoginFormComponent implements OnInit {
     };
 
     this.loginService.login(loginRequest).subscribe({
-      next(response) {
-        this.processing = false;
+      next: (response) => {},
+      error : (err) => {
+        console.log('Logging error.');
+        console.log(err);
+        console.log(err.error);
+        this.error= err.error.Error.message;
       },
-      error(err) {
-        this.processing = false;
-      },
-      complete() {
-        this.processing = false;
+      complete: () => {
         this.router.navigate(['']);
       },
     });

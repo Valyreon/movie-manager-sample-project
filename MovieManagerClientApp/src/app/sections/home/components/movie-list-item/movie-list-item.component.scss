@@ -1,10 +1,33 @@
 .star {
-    transform: scale(1.8);
-    margin-right: 10px;
+  transform: scale(1.8);
+  margin-right: 10px;
 }
 
 .movie-rating {
-    min-width: 100px;
-    display: flex;
-    align-items: center;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.movie-list-card {
+  max-height: 300px;
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+}
+
+.movie-title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-right: 10px;
+  display: inline-block;
+}
+
+.details-button {
+  display: none;
+}
+
+.movie-list-card:hover .details-button {
+  display: inline-block;
 }

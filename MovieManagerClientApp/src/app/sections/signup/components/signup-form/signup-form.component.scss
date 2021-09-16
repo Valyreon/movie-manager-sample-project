@@ -1,35 +1,38 @@
 #signup-card {
-    max-width: 600px;
-    width: 600px;
+  min-width: 600px;
+  width: 50%;
+  box-sizing: border-box;
 }
 
 :host {
-    align-items: center;
-    display: flex;
+  align-items: center;
+  display: flex;
+  width: 100%;
 }
 
 #submit-button-wrapper {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 #submit-button {
-    min-width: 150px;
+  min-width: 150px;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 500px) {
   #submit-button {
     width: 100%;
-    min-width: none;
-    }
+    min-width: 0px;
+  }
 
-#signup-card {
+  #signup-card {
+    min-width: 0px;
     width: 100%;
-}
+  }
 }
 
 #signup-footer {
-    text-align: center;
-    margin-bottom: 10px;
-    color: rgba(0,0,0,.54);
+  text-align: center;
+  margin-bottom: 10px;
+  color: rgba(0, 0, 0, 0.54);
 }

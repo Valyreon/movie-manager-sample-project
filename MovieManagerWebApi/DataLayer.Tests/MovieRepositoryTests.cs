@@ -3,18 +3,16 @@ using System.Linq;
 using DataLayer.Parameters;
 using Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Xunit;
 
 namespace DataLayer.Tests
 {
-    [TestClass]
     public class MovieRepositoryTests
     {
         private static int dbCount = 0;
         private DbContextOptions<MovieDbContext> options;
 
-        [TestInitialize]
-        public void Setup()
+        public MovieRepositoryTests()
         {
             options = new DbContextOptionsBuilder<MovieDbContext>()
                                 .UseInMemoryDatabase(databaseName: $"MovieListDatabase{dbCount++}")
@@ -72,13 +70,7 @@ namespace DataLayer.Tests
             _ = uow.Commit();
         }
 
-        [TestCleanup]
-        public void Finish()
-        {
-
-        }
-
-        [TestMethod]
+        [Fact]
         public void GetSingleTopRatedMovieTest()
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
@@ -90,10 +82,10 @@ namespace DataLayer.Tests
             };
             var topRatedMovie = uow.Movies.Page(pageParameters).PageItems.Single();
 
-            Assert.AreEqual("The Shawshank Redemption", topRatedMovie.Title);
+            Assert.Equal("The Shawshank Redemption", topRatedMovie.Title);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetTwoTopRatedMovieTest()
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
@@ -105,12 +97,12 @@ namespace DataLayer.Tests
             };
             var topRatedMovies = uow.Movies.Page(pageParameters).PageItems.ToList();
 
-            Assert.AreEqual(2, topRatedMovies.Count);
-            Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
-            Assert.AreEqual("The Godfather", topRatedMovies[1].Title);
+            Assert.Equal(2, topRatedMovies.Count);
+            Assert.Equal("The Shawshank Redemption", topRatedMovies[0].Title);
+            Assert.Equal("The Godfather", topRatedMovies[1].Title);
         }
 
-        [TestMethod]
+        [Fact]
         public void GetDefaultTopRatedMovieTest()
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
@@ -119,12 +111,24 @@ namespace DataLayer.Tests
             var topRatedMovies = uow.Movies.Page(pageParameters).PageItems.ToList();
 
             // will still return two because one movie is unrated
-            Assert.AreEqual(2, topRatedMovies.Count);
-            Assert.AreEqual("The Shawshank Redemption", topRatedMovies[0].Title);
-            Assert.AreEqual("The Godfather", topRatedMovies[1].Title);
+            Assert.Equal(3, topRatedMovies.Count);
+            Assert.Equal("The Shawshank Redemption", topRatedMovies[0].Title);
+            Assert.Equal("The Godfather", topRatedMovies[1].Title);
+            Assert.Equal("The Dark Knight", topRatedMovies[2].Title);
         }
 
-        [TestMethod]
+        [Fact]
+        public void GetMovieDetailsTest()
+        {
+            using var uow = new UnitOfWork(new MovieDbContext(options));
+
+            var movie = uow.Movies.GetMovieWithLoadedData(1);
+
+            // will still return two because one movie is unrated
+            Assert.Equal("The Shawshank Redemption", movie.Title);
+        }
+
+        [Fact]
         public void SearchTest_4Stars()
         {
             using var uow = new UnitOfWork(new MovieDbContext(options));
@@ -136,7 +140,7 @@ namespace DataLayer.Tests
             var movie4Star = uow.Movies.Page(pageParameters).PageItems.Single();
 
             // godfather will have 4 average review
-            Assert.AreEqual("The Godfather", movie4Star.Title);
+            Assert.Equal("The Godfather", movie4Star.Title);
         }
     }
 }
